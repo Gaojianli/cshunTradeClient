@@ -3,6 +3,7 @@
  * @param {object} ctx nuxt上下文 https://nuxtjs.org/api/context
  */
 export default function (ctx) {
+  if (ctx.route.path === '/login') return;
   if (!!ctx.store.state.user.username) return; //已经登陆
   //try to login via token
   const token = sessionStorage.getItem('token');
