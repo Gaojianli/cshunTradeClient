@@ -6,9 +6,6 @@
       <v-toolbar-items>
         <router-link to="/" tag="v-btn" class="v-btn--flat">首页</router-link>
         <router-link to="/login" tag="v-btn" class="v-btn--flat">登记</router-link>
-        <router-link to="/hod" tag="v-btn" class="v-btn--flat v-btn--icon">
-          <v-icon>fas fa-user-cog</v-icon>
-        </router-link>
       </v-toolbar-items>
     </v-toolbar>
     <nuxt/>
@@ -24,10 +21,7 @@ export default {
 </script>
 
 <style>
-i.v-icon.fas.fa-user-cog {
-  font-size: 16px;
-}
-nav.theme--dark.v-toolbar.main-header{
-  background-color: #2F2F2F !important;/*wechat header*/
+nav.theme--dark.v-toolbar.main-header {
+  background-color: #2f2f2f !important; /*wechat header*/
 }
 </style>
