@@ -3,22 +3,33 @@
  * @param {object} ctx nuxt上下文 https://nuxtjs.org/api/context
  */
 export default function (ctx) {
-  if (ctx.route.path === '/login') return;
-  if (!!ctx.store.state.user.username) return; //已经登陆
-  //try to login via token
-  const token = sessionStorage.getItem('token');
-  console.log('token:' + token);
-  if (token) {
-    ctx.store.dispatch('user/me', token)
-      .then(() => { //login success
-        return ctx.redirect('/')
-      })
-      .catch(() => { //login failed
-        ctx.redirect('/login');
-        return;
-      })
-  }
-  //to login page
-  else
-    return ctx.redirect('/login');
+  return new Promise((resolve, reject) => {
+    if (ctx.route.path === '/login') {
+      resolve();
+      return;
+    }
+    if (!!ctx.store.state.user.username) {
+      resolve();
+      return;
+    }
+    //try to login via token
+    const token = sessionStorage.getItem('token');
+    console.log('token:' + token);
+    if (token) {
+      ctx.store.dispatch('user/me', token)
+        .then(() => { //login success
+          console.log('get me');
+          //ctx.redirect('/')
+          resolve();
+          return;
+        })
+        .catch(() => { //login failed
+          ctx.redirect('/login');
+          return;
+        })
+    }
+    //to login page
+    else
+      return ctx.redirect('/login');
+  });
 }
