@@ -18,7 +18,6 @@ export default function (ctx) {
     if (token) {
       ctx.store.dispatch('user/me', token)
         .then(() => { //login success
-          console.log('get me');
           //ctx.redirect('/')
           resolve();
           return;
