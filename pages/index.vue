@@ -28,7 +28,7 @@
           <v-list two-line subheader light>
             <!-- <v-subheader inset>果蔬类登记</v-subheader> -->
             <v-list-tile v-for="item in $store.state.enrollment.VegEnrollment" :key="item.id"
-              @click="showDetail(item)" ripple>
+              @click="showVegDetail(item)" ripple>
               <v-list-tile-content>
                 <v-list-tile-title>{{ item.mainBody }}</v-list-tile-title>
                 <v-list-tile-sub-title>{{ item.category }} - {{item.categorySecondary}}</v-list-tile-sub-title>
@@ -53,8 +53,12 @@ export default {
     return {};
   },
   methods: {
-    showDetail(item) {
-      return;
+    showVegDetail(item) {
+      this.$store.commit("actEnrollment", {
+        type: "veg",
+        id: item.id
+      });
+      this.$router.push("/editErm");
     }
   }
 };
