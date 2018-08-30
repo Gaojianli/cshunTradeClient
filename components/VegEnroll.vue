@@ -72,13 +72,12 @@ export default {
           hasCoolStore: false,
           minPrice: 0
         };
-      },
-      loading: {
-        type: Boolean,
-        required: false,
-        default: () => {
-          return false;
-        }
+      }
+    },
+    loading: {
+      type: Boolean,
+      default: () => {
+        return false;
       }
     }
   },
