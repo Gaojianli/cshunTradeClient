@@ -2,7 +2,7 @@
   <v-container>
     <v-layout justify-center align-center>
       <v-flex xs12 sm8 md6>
-        <v-card dark class="user-card">
+        <v-card dark class="user-card elevation-5">
           <v-card-title>
             <h2>{{$store.state.user.name}}</h2>
           </v-card-title>
@@ -16,12 +16,47 @@
         </v-card>
       </v-flex>
     </v-layout>
+    <v-layout justify-center class="py-2">
+      <v-flex xs12 md6 v-if="$store.state.enrollment.VegEnrollment.length > 0">
+        <v-card>
+          <v-toolbar flat dark color="green lighten-1">
+            <v-btn icon>
+              <v-icon>fas fa-apple-alt</v-icon>
+            </v-btn>
+            <v-toolbar-title>果蔬类登记</v-toolbar-title>
+          </v-toolbar>
+          <v-list two-line subheader light>
+            <!-- <v-subheader inset>果蔬类登记</v-subheader> -->
+            <v-list-tile v-for="item in $store.state.enrollment.VegEnrollment" :key="item.id"
+              @click="showDetail(item)" ripple>
+              <v-list-tile-content>
+                <v-list-tile-title>{{ item.mainBody }}</v-list-tile-title>
+                <v-list-tile-sub-title>{{ item.category }} - {{item.categorySecondary}}</v-list-tile-sub-title>
+                <v-list-tile-sub-title style="font-size:12px;">{{ item.town }} - {{item.street}}</v-list-tile-sub-title>
+              </v-list-tile-content>
+            </v-list-tile>
+            <!-- <v-divider inset></v-divider> -->
+          </v-list>
+        </v-card>
+      </v-flex>
+    </v-layout>
   </v-container>
 </template>
 
 <script>
 export default {
-  components: {}
+  asyncData({ store }) {
+    store.dispatch("enrollment/updateVegEnrollments");
+  },
+  components: {},
+  data() {
+    return {};
+  },
+  methods: {
+    showDetail(item) {
+      return;
+    }
+  }
 };
 </script>
 
