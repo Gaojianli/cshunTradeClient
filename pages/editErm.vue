@@ -8,7 +8,7 @@
         <v-layout justify-center column>
           <v-flex xs12>
             <VegEnroll v-if="$store.state.active_enrollment.type == 'veg'" :editable="meta_editable"
-              :init_form="meta" @save="saveEnrollment" />
+              :init_form="meta" @save="saveEnrollment" :loading="loading" />
           </v-flex>
           <v-flex v-if="!meta_editable">
             <v-btn flat @click="meta_editable = true">编辑登记</v-btn>
@@ -164,10 +164,20 @@ export default {
           console.log(err);
           alert("删除失败");
         });
-    }
+    },
     /**
      * 保存修改登记信息
      */
+    saveEnrollment(form) {
+      this.loading = true;
+      let { type, id } = this.$store.state.active_enrollment;
+      this.$store
+        .dispatch(`enrollment/update_${type}Enrollment`, form)
+        .then(() => {
+          this.meta_editable = false;
+          this.loading = false;
+        });
+    }
   }
 };
 </script>
