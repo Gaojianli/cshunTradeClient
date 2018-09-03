@@ -13,25 +13,28 @@
         <v-select :items="schema" label="一级分类" v-model="form.category" :disabled="!editable"></v-select>
         <v-text-field label="二级品种分类" v-model="form.categorySecondary" :disabled="!editable"></v-text-field>
         <!-- 种植日期 -->
-        <v-dialog ref="dialog" v-model="modal.plant_date" persistent lazy full-width width="290px">
+        <v-dialog ref="dialog" v-model="modal.plant_date" :persistent="editable" lazy full-width
+          width="290px">
           <v-text-field slot="activator" v-model="form.plantDate" label="种植时间" prepend-icon="fas fa-calendar-alt"
             readonly :disabled="!editable"></v-text-field>
           <v-date-picker v-model="form.plantDate" scrollable @input="modal.plant_date = false"
-            locale="zh-cn" color="success"></v-date-picker>
+            locale="zh-cn" color="success" :readonly="!editable"></v-date-picker>
         </v-dialog>
         <!-- 预计上市时间 -->
-        <v-dialog ref="dialog" v-model="modal.begin_date" persistent lazy full-width width="290px">
+        <v-dialog ref="dialog" v-model="modal.begin_date" :persistent="editable" lazy full-width
+          width="290px">
           <v-text-field slot="activator" v-model="form.marketBeginDate" label="预计上市时间" prepend-icon="fas fa-calendar-alt"
             readonly :disabled="!editable"></v-text-field>
           <v-date-picker v-model="form.marketBeginDate" scrollable @input="modal.begin_date = false"
-            locale="zh-cn" color="success"></v-date-picker>
+            locale="zh-cn" color="success" :readonly="!editable"></v-date-picker>
         </v-dialog>
         <!-- 上市结束时间 -->
-        <v-dialog ref="dialog" v-model="modal.end_date" persistent lazy full-width width="290px">
+        <v-dialog ref="dialog" v-model="modal.end_date" :persistent="editable" lazy full-width
+          width="290px">
           <v-text-field slot="activator" v-model="form.marketEndDate" label="上市结束时间" prepend-icon="fas fa-calendar-alt"
             readonly :disabled="!editable"></v-text-field>
           <v-date-picker v-model="form.marketEndDate" scrollable @input="modal.end_date = false"
-            locale="zh-cn" color="success"></v-date-picker>
+            locale="zh-cn" color="success" :readonly="!editable"></v-date-picker>
         </v-dialog>
 
         <v-checkbox label="是否有冷链存储" v-model="form.hasCoolStore" :disabled="!editable"></v-checkbox>
@@ -65,6 +68,7 @@ export default {
           area: 0,
           yield: 0,
           location: {},
+          categroy: "",
           categorySecondary: "",
           plantDate: "",
           marketBeginDate: "",
