@@ -1,11 +1,49 @@
 <template>
   <v-container>
-    <v-layout justify-center>
-      <v-flex xs12>
-        <VegEnroll v-if="$store.state.active_enrollment.type == 'veg'" :editable="false"
-          :init_form="meta" />
-      </v-flex>
-    </v-layout>
+    <v-tabs>
+      <v-tab>登记信息</v-tab>
+      <v-tab>订单信息</v-tab>
+      <!-- 登记元信息 -->
+      <v-tab-item>
+        <v-layout justify-center>
+          <v-flex xs12>
+            <VegEnroll v-if="$store.state.active_enrollment.type == 'veg'" :editable="false"
+              :init_form="meta" />
+          </v-flex>
+        </v-layout>
+      </v-tab-item>
+      <!-- 订单列表 -->
+      <v-tab-item>
+        <v-layout column>
+          <v-flex xs12>
+            <v-checkbox label="是否有订单" v-model="has_order" :disabled="orders.length > 0"></v-checkbox>
+          </v-flex>
+          <v-flex xs12>
+            <v-btn block flat @click="active = true" v-if="has_order" style="border:dashed rgba(0,0,0,0.25) 2px;">
+              <v-icon style="font-size:18px;">fas fa-plus</v-icon>
+              <span>增加订单</span>
+            </v-btn>
+          </v-flex>
+        </v-layout>
+      </v-tab-item>
+      <v-dialog persistent v-model="active">
+        <v-card>
+          <v-card-text>
+            <v-form>
+              <v-text-field label="地址" v-model="form_data.address"></v-text-field>
+              <v-text-field label="价格" v-model="form_data.price"></v-text-field>
+              <v-select :items="modes" v-model="form_data.saleMode" item-text="name" item-value="value"
+                label="登记类型"></v-select>
+            </v-form>
+          </v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn flat color="blue" @click="saveDialog" :loading="loading">保存</v-btn>
+            <v-btn flat color="error" @click="cancelDialog">取消</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+    </v-tabs>
   </v-container>
 </template>
 
@@ -26,17 +64,75 @@ export default {
         })
       );
     //获取登记订单信息
-    axios
-      .get(`/${type}Enrollment/${id}/orders`)
-      .then(({ data }) => {
-        cb(null, { orders: data, meta: meta });
+    ctx.$axios
+      .$get(`/${type}Enrollment/${id}/orders`)
+      .then(data => {
+        console.log(data);
+        cb(null, {
+          orders: data,
+          meta: meta,
+          has_order: data.length > 0 ? true : false
+        });
       })
       .catch(err => {
-        cb({ statusCode: 404, message: "没有收到预期的数据，请回到首页" });
+        cb({ statusCode: 404, message: "没有收到预期的数据，请刷新" });
       });
   },
   components: {
     VegEnroll
+  },
+  data() {
+    return {
+      active: false,
+      loading: false,
+      form_data: {
+        address: "",
+        price: null,
+        saleMode: ""
+      },
+      modes: [
+        { name: "固定价格", value: "Fixed" },
+        { name: "市场价格", value: "Market" },
+        { name: "保底价格 + 市场价格", value: "SafeMarket" }
+      ]
+    };
+  },
+  methods: {
+    fetchOrders() {
+      let { type, id } = this.$store.state.active_enrollment;
+      this.$axios
+        .$get(`/${type}Enrollment/${id}/orders`)
+        .then(data => {
+          this.orders = data;
+        })
+        .catch(err => {
+          console.log(err);
+          alert("更新订单失败");
+        });
+    },
+    saveDialog() {
+      this.loading = true;
+      let { type, id } = this.$store.state.active_enrollment;
+      this.$axios
+        .$post(`/${type}Enrollment/${id}/orders`, this.form_data)
+        .then(() => {
+          this.loading = false;
+          this.fetchOrders();
+          this.cancelDialog();
+        })
+        .catch(err => {
+          this.loading = false;
+          console.log(err);
+          alert("保存失败");
+        });
+    },
+    cancelDialog() {
+      this.form_data.address = "";
+      this.form_data.price = null;
+      this.form_data.saleMode = "";
+      this.active = false;
+    }
   }
 };
 </script>
+
