@@ -46,7 +46,7 @@
 <script>
 export default {
   asyncData({ store }) {
-    store.dispatch("enrollment/updateVegEnrollments");
+    store.dispatch("enrollment/read_vegEnrollments");
   },
   components: {},
   data() {

@@ -27,7 +27,7 @@ export default {
     vegEnroll(data) {
       this.loading = true;
       this.$store
-        .dispatch("enrollment/createVegEnrollment", data)
+        .dispatch("enrollment/create_vegEnrollment", data)
         .then(() => {
           this.loading = false;
           this.$router.push("/");

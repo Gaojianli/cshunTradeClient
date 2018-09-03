@@ -5,10 +5,14 @@
       <v-tab>订单信息</v-tab>
       <!-- 登记元信息 -->
       <v-tab-item>
-        <v-layout justify-center>
+        <v-layout justify-center column>
           <v-flex xs12>
-            <VegEnroll v-if="$store.state.active_enrollment.type == 'veg'" :editable="false"
-              :init_form="meta" />
+            <VegEnroll v-if="$store.state.active_enrollment.type == 'veg'" :editable="meta_editable"
+              :init_form="meta" @save="saveEnrollment" />
+          </v-flex>
+          <v-flex v-if="!meta_editable">
+            <v-btn flat @click="meta_editable = true">编辑登记</v-btn>
+            <v-btn flat color="error" @click="deleteEnrollment">删除登记</v-btn>
           </v-flex>
         </v-layout>
       </v-tab-item>
@@ -37,7 +41,6 @@
             </v-form>
           </v-card-text>
           <v-card-actions>
-            <v-spacer></v-spacer>
             <v-btn flat color="blue" @click="saveDialog" :loading="loading">保存</v-btn>
             <v-btn flat color="error" @click="cancelDialog">取消</v-btn>
           </v-card-actions>
@@ -85,6 +88,7 @@ export default {
     return {
       active: false,
       loading: false,
+      meta_editable: false,
       form_data: {
         address: "",
         price: null,
@@ -98,6 +102,9 @@ export default {
     };
   },
   methods: {
+    /**
+     * 获取订单信息
+     */
     fetchOrders() {
       let { type, id } = this.$store.state.active_enrollment;
       this.$axios
@@ -110,6 +117,9 @@ export default {
           alert("更新订单失败");
         });
     },
+    /**
+     * 保存订单信息
+     */
     saveDialog() {
       this.loading = true;
       let { type, id } = this.$store.state.active_enrollment;
@@ -126,12 +136,38 @@ export default {
           alert("保存失败");
         });
     },
+    /**
+     * 取消创建订单
+     */
     cancelDialog() {
       this.form_data.address = "";
       this.form_data.price = null;
       this.form_data.saleMode = "";
       this.active = false;
+    },
+    /**
+     * 删除登记
+     */
+    deleteEnrollment() {
+      if (!confirm("确认删除这项登记？")) return;
+      this.$store
+        .dispatch(
+          `enrollment/delete_${
+            this.$store.state.active_enrollment.type
+          }Enrollments`,
+          this.$store.state.active_enrollment.id
+        )
+        .then(() => {
+          this.$router.push("/");
+        })
+        .catch(err => {
+          console.log(err);
+          alert("删除失败");
+        });
     }
+    /**
+     * 保存修改登记信息
+     */
   }
 };
 </script>
