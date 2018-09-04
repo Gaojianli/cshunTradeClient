@@ -6,6 +6,7 @@
       <v-flex xs12 v-if="type !== ''">
         <VegEnroll :editable="true" v-if="type == '蔬果类登记'" @save="vegEnroll" :loading="loading"
         />
+        <AnimalEnroll v-else :editable="true" :loading="loading" />
       </v-flex>
     </v-layout>
   </v-container>
@@ -13,9 +14,11 @@
 
 <script>
 import VegEnroll from "@/components/VegEnroll";
+import AnimalEnroll from "@/components/AnimalEnroll";
 export default {
   components: {
-    VegEnroll
+    VegEnroll,
+    AnimalEnroll
   },
   data() {
     return {

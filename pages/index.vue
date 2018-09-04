@@ -16,7 +16,8 @@
         </v-card>
       </v-flex>
     </v-layout>
-    <v-layout justify-center class="py-2">
+    <!-- 果蔬类列表 -->
+    <v-layout wrap justify-center class="py-2">
       <v-flex xs12 md6 v-if="$store.state.enrollment.VegEnrollment.length > 0">
         <v-card>
           <v-toolbar flat dark color="green lighten-1">
@@ -35,7 +36,27 @@
                 <v-list-tile-sub-title style="font-size:12px;">{{ item.town }} - {{item.street}}</v-list-tile-sub-title>
               </v-list-tile-content>
             </v-list-tile>
-            <!-- <v-divider inset></v-divider> -->
+          </v-list>
+        </v-card>
+      </v-flex>
+      <!-- 牲畜类列表 -->
+      <v-flex xs12 md6 v-if="$store.state.enrollment.AnimalEnrollment.length > 0">
+        <v-card>
+          <v-toolbar flat dark color="orange lighten-1">
+            <v-btn icon>
+              <v-icon>fas fa-piggy-bank</v-icon>
+            </v-btn>
+            <v-toolbar-title>牲畜类登记</v-toolbar-title>
+          </v-toolbar>
+          <v-list two-line subheader light>
+            <v-list-tile v-for="item in $store.state.enrollment.AnimalEnrollment" :key="item.id"
+              @click="showAnimalDetail(item)" ripple>
+              <v-list-tile-content>
+                <v-list-tile-title>{{ item.mainBody }}</v-list-tile-title>
+                <v-list-tile-sub-title>{{ item.category }} - {{item.categorySecondary}}</v-list-tile-sub-title>
+                <v-list-tile-sub-title style="font-size:12px;">{{ item.town }} - {{item.street}}</v-list-tile-sub-title>
+              </v-list-tile-content>
+            </v-list-tile>
           </v-list>
         </v-card>
       </v-flex>
@@ -47,6 +68,7 @@
 export default {
   asyncData({ store }) {
     store.dispatch("enrollment/read_vegEnrollments");
+    store.dispatch("enrollment/read_animalEnrollments");
   },
   components: {},
   data() {
@@ -56,6 +78,13 @@ export default {
     showVegDetail(item) {
       this.$store.commit("actEnrollment", {
         type: "veg",
+        id: item.id
+      });
+      this.$router.push("/editErm");
+    },
+    showAnimalDetail(item) {
+      this.$store.commit("actEnrollment", {
+        type: "animal",
         id: item.id
       });
       this.$router.push("/editErm");

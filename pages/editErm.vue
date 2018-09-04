@@ -9,6 +9,8 @@
           <v-flex xs12>
             <VegEnroll v-if="$store.state.active_enrollment.type == 'veg'" :editable="meta_editable"
               :init_form="meta" @save="saveEnrollment" :loading="loading" />
+            <AnimalEnroll v-else :editable="meta_editable" :init_form="meta" @save="saveEnrollment"
+              :loading="loading" />
           </v-flex>
           <v-flex v-if="!meta_editable">
             <v-btn flat @click="meta_editable = true">编辑登记</v-btn>
@@ -79,6 +81,7 @@
 <script>
 import axios from "axios";
 import VegEnroll from "@/components/VegEnroll";
+import AnimalEnroll from "@/components/AnimalEnroll";
 export default {
   asyncData(ctx, cb) {
     if (!ctx.store.state.active_enrollment.id) ctx.redirect("/");
@@ -89,6 +92,13 @@ export default {
       meta = Object.assign(
         {},
         ctx.store.state.enrollment.VegEnrollment.find(x => {
+          return x.id == id;
+        })
+      );
+    else
+      meta = Object.assign(
+        {},
+        ctx.store.state.enrollment.AnimalEnrollment.find(x => {
           return x.id == id;
         })
       );
@@ -108,7 +118,8 @@ export default {
       });
   },
   components: {
-    VegEnroll
+    VegEnroll,
+    AnimalEnroll
   },
   data() {
     return {
