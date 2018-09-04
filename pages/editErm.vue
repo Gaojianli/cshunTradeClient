@@ -22,6 +22,31 @@
           <v-flex xs12>
             <v-checkbox label="是否有订单" v-model="has_order" :disabled="orders.length > 0"></v-checkbox>
           </v-flex>
+          <!-- 订单列表 -->
+          <v-flex>
+            <v-card flat class="transparent">
+              <v-list three-line>
+                <template v-for="item in orders">
+                  <v-list-tile :key="item.id">
+                    <v-list-tile-content>
+                      <v-list-tile-title>{{item.address}}</v-list-tile-title>
+                      <v-list-tile-sub-title>价格：{{item.price}}</v-list-tile-sub-title>
+                      <v-list-tile-sub-title>模式：{{modes.find((x)=>{return x.value == item.saleMode}).name}}</v-list-tile-sub-title>
+                    </v-list-tile-content>
+                    <v-list-tile-action>
+                      <v-btn icon ripple>
+                        <v-icon color="blue darken-1" class="list-icon" @click="editOrder(item)">fas fa-pen</v-icon>
+                      </v-btn>
+                      <v-btn icon ripple>
+                        <v-icon color="red" class="list-icon" @click="deleteOrder(item)">fas fa-trash-alt</v-icon>
+                      </v-btn>
+                    </v-list-tile-action>
+                  </v-list-tile>
+                  <v-divider :key="-item.id"></v-divider>
+                </template>
+              </v-list>
+            </v-card>
+          </v-flex>
           <v-flex xs12>
             <v-btn block flat @click="active = true" v-if="has_order" style="border:dashed rgba(0,0,0,0.25) 2px;">
               <v-icon style="font-size:18px;">fas fa-plus</v-icon>
@@ -30,6 +55,7 @@
           </v-flex>
         </v-layout>
       </v-tab-item>
+      <!-- 订单表单 -->
       <v-dialog persistent v-model="active">
         <v-card>
           <v-card-text>
@@ -92,7 +118,8 @@ export default {
       form_data: {
         address: "",
         price: null,
-        saleMode: ""
+        saleMode: "",
+        id: null
       },
       modes: [
         { name: "固定价格", value: "Fixed" },
@@ -123,18 +150,37 @@ export default {
     saveDialog() {
       this.loading = true;
       let { type, id } = this.$store.state.active_enrollment;
-      this.$axios
-        .$post(`/${type}Enrollment/${id}/orders`, this.form_data)
-        .then(() => {
-          this.loading = false;
-          this.fetchOrders();
-          this.cancelDialog();
-        })
-        .catch(err => {
-          this.loading = false;
-          console.log(err);
-          alert("保存失败");
-        });
+      if (!this.form_data.id) {
+        //新建订单
+        this.$axios
+          .$post(`/${type}Enrollment/${id}/orders`, this.form_data)
+          .then(() => {
+            this.loading = false;
+            this.fetchOrders();
+            this.cancelDialog(); //还原表单
+          })
+          .catch(err => {
+            this.loading = false;
+            console.log(err);
+            alert("保存失败");
+          });
+      } else {
+        //修改订单
+        this.$axios
+          .$put(
+            `/${type}Enrollment/${id}/orders/${this.form_data.id}`,
+            this.form_data
+          )
+          .then(() => {
+            this.loading = false;
+            this.fetchOrders();
+            this.cancelDialog();
+          })
+          .catch(err => {
+            console.log(err);
+            alert("保存失败");
+          });
+      }
     },
     /**
      * 取消创建订单
@@ -143,7 +189,33 @@ export default {
       this.form_data.address = "";
       this.form_data.price = null;
       this.form_data.saleMode = "";
+      this.form_data.id = null;
       this.active = false;
+    },
+    /**
+     * 编辑订单
+     */
+    editOrder(item) {
+      this.form_data.id = item.id;
+      this.form_data.address = item.address;
+      this.form_data.price = item.price;
+      this.form_data.saleMode = item.saleMode;
+      this.active = true;
+    },
+    /**
+     * 删除订单
+     */
+    deleteOrder(item) {
+      let { type, id } = this.$store.state.active_enrollment;
+      this.$axios
+        .$delete(`/${type}Enrollment/${id}/orders/${item.id}`)
+        .then(() => {
+          this.fetchOrders();
+        })
+        .catch(err => {
+          console.log(err);
+          alert("删除失败");
+        });
     },
     /**
      * 删除登记
@@ -181,4 +253,16 @@ export default {
   }
 };
 </script>
+
+<style>
+.transparent > .v-list {
+  background-color: transparent;
+}
+.transparent.theme--light .v-card {
+  background-color: transparent;
+}
+.list-icon {
+  font-size: 16px;
+}
+</style>
 
