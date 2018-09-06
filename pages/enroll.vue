@@ -6,7 +6,7 @@
       <v-flex xs12 v-if="type !== ''">
         <VegEnroll :editable="true" v-if="type == '蔬果类登记'" @save="vegEnroll" :loading="loading"
         />
-        <AnimalEnroll v-else :editable="true" :loading="loading" />
+        <AnimalEnroll v-else :editable="true" :loading="loading" @save="animalEnroll" />
       </v-flex>
     </v-layout>
   </v-container>
@@ -31,6 +31,18 @@ export default {
       this.loading = true;
       this.$store
         .dispatch("enrollment/create_vegEnrollment", data)
+        .then(() => {
+          this.loading = false;
+          this.$router.push("/");
+        })
+        .catch(() => {
+          this.loading = false;
+        });
+    },
+    animalEnroll(data) {
+      this.loading = true;
+      this.$store
+        .dispatch("enrollment/create_animalEnrollment", data)
         .then(() => {
           this.loading = false;
           this.$router.push("/");

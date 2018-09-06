@@ -135,9 +135,9 @@ export const actions = {
     })
   },
   /**
-   * 创建果蔬类登记
+   * 创建牲畜类登记
    */
-  create_vegEnrollment({ dispatch, commit }, _animalEnrollmentData) {
+  create_animalEnrollment({ dispatch, commit }, _animalEnrollmentData) {
     return new Promise((resolve, reject) => {
       this.$axios.post('/animalEnrollment', _animalEnrollmentData)
         .then(({ data }) => {
@@ -151,4 +151,35 @@ export const actions = {
         })
     });
   },
+  /**
+   * 删除牲畜类登记
+   */
+  delete_animalEnrollments({ dispatch, commit }, id) {
+    return new Promise((resolve, reject) => {
+      this.$axios.$delete(`/animalEnrollment/${id}`)
+        .then(() => {
+          dispatch('read_animalEnrollments')
+            .then(() => {
+              resolve();
+            })
+        })
+        .catch(err => {
+          reject(err);
+        })
+    })
+  },
+  /**
+   * 更新牲畜类登记
+   */
+  update_animalEnrollment({ dispatch, commit }, erm) {
+    return new Promise((resolve, reject) => {
+      this.$axios.$put(`/animalEnrollment/${erm.id}`, erm)
+        .then(() => {
+          dispatch('read_animalEnrollments') //修改成功更新登记信息
+            .then(() => {
+              resolve();
+            })
+        })
+    })
+  }
 }
