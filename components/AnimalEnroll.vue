@@ -8,6 +8,8 @@
         <v-text-field label="主体负责人联系方式" v-model="form.contacts" :disabled="!editable"></v-text-field>
         <v-text-field label="乡镇" v-model="form.town" :disabled="!editable"></v-text-field>
         <v-text-field label="街道（村）" v-model="form.street" :disabled="!editable"></v-text-field>
+        <v-text-field label="规模数量" suffix="个" v-model="form.area" :disabled="!editable"></v-text-field>
+        <v-text-field label="产量" suffix="个" v-model="form.yield" :disabled="!editable"></v-text-field>
         <v-select :items="schema" label="品种" v-model="form.category" :disabled="!editable"></v-select>
         <v-text-field label="二级品种" v-model="form.categorySecondary" :disabled="!editable"></v-text-field>
         <!-- 投苗时间 -->
@@ -57,13 +59,15 @@ export default {
           town: "",
           street: "",
           location: {},
-          categroy: "",
+          category: "",
           categorySecondary: "",
           seedlingDate: "",
           outOfBarDate: "",
           outOfBarCount: null,
           hasCoolStore: false,
-          minPrice: 0
+          minPrice: 0,
+          area: null,
+          yield: null
         };
       }
     },

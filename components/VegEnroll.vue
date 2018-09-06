@@ -68,7 +68,7 @@ export default {
           area: 0,
           yield: 0,
           location: {},
-          categroy: "",
+          category: "",
           categorySecondary: "",
           plantDate: "",
           marketBeginDate: "",
