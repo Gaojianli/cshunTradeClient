@@ -37,6 +37,7 @@ export default {
         })
         .catch(() => {
           this.loading = false;
+          alert("输入异常");
         });
     },
     animalEnroll(data) {
@@ -49,6 +50,7 @@ export default {
         })
         .catch(() => {
           this.loading = false;
+          alert("输入异常");
         });
     }
   }

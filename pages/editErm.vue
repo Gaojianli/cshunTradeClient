@@ -259,6 +259,9 @@ export default {
         .then(() => {
           this.meta_editable = false;
           this.loading = false;
+        })
+        .catch(err => {
+          alert("保存失败");
         });
     }
   }
