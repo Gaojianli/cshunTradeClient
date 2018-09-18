@@ -68,9 +68,7 @@ module.exports = {
    */
   axios: {
     // See https://github.com/nuxt-community/axios-module#options
-    host: 'cshun-docking.dev.idx0.me',
-    port:443,
-    https: true
+    host: '/api'
   },
 
   /**
