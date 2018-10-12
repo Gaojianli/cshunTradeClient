@@ -3,11 +3,11 @@
     <!-- form -->
     <v-flex xs12>
       <v-form v-model="valid">
-        <v-text-field label="主体" v-model="form.mainBody" :disabled="!editable"></v-text-field>
+        <v-text-field label="生产主体" v-model="form.mainBody" :disabled="!editable"></v-text-field>
         <v-text-field label="主体负责人" v-model="form.principal" :disabled="!editable"></v-text-field>
         <v-text-field label="主体负责人联系方式" v-model="form.contacts" :disabled="!editable"></v-text-field>
         <v-text-field label="乡镇" v-model="form.town" :disabled="!editable"></v-text-field>
-        <v-text-field label="街道（村）" v-model="form.street" :disabled="!editable"></v-text-field>
+        <v-text-field label="所在村（社区）" v-model="form.street" :disabled="!editable"></v-text-field>
         <v-text-field label="规模数量" suffix="个" v-model="form.area" :disabled="!editable"></v-text-field>
         <v-text-field label="产量" suffix="个" v-model="form.yield" :disabled="!editable"></v-text-field>
         <v-select :items="schema" label="品种" v-model="form.category" :disabled="!editable"></v-select>
