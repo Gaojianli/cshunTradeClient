@@ -38,7 +38,7 @@
             locale="zh-cn" color="success" :readonly="!editable"></v-date-picker>
         </v-dialog>
         <v-radio-group row label="是否有冷链存储:" v-model="form.hasCoolStore">
-          <v-radio label="是" value="true"></v-radio>
+          <v-radio style="margin-left:20px" label="是" value="true"></v-radio>
           <v-radio label="否" value="false"></v-radio>
         </v-radio-group>
         <v-text-field label="保本销售价格" prefix="￥" suffix="元/每斤" v-model="form.minPrice" :disabled="!editable"></v-text-field>
