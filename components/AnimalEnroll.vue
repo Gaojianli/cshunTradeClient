@@ -4,6 +4,7 @@
     <v-flex xs12>
       <v-form v-model="valid">
         <v-text-field label="生产主体" v-model="form.mainBody" :disabled="!editable"></v-text-field>
+        <v-select :items='["大户","合作社","企业"]' label="主体类型" v-model="form.mainBodyType" :disabled="!editable"></v-select>
         <v-text-field label="主体负责人" v-model="form.principal" :disabled="!editable"></v-text-field>
         <v-text-field label="主体负责人联系方式" v-model="form.contacts" :disabled="!editable"></v-text-field>
         <v-text-field label="乡镇" v-model="form.town" :disabled="!editable"></v-text-field>
@@ -30,7 +31,10 @@
         </v-dialog>
 
         <v-text-field label="出栏数量" v-model="form.outOfBarCount" :disabled="!editable"></v-text-field>
-        <v-checkbox label="是否有冷链存储" v-model="form.hasCoolStore" :disabled="!editable"></v-checkbox>
+       <v-radio-group row label="是否有冷链存储:" v-model="form.hasCoolStore">
+          <v-radio label="是" value="true"></v-radio>
+          <v-radio label="否" value="false"></v-radio>
+        </v-radio-group>
         <v-text-field label="保本销售价格" prefix="￥" suffix="元/每个" v-model="form.minPrice" :disabled="!editable"></v-text-field>
       </v-form>
     </v-flex>
@@ -54,6 +58,7 @@ export default {
       default: () => {
         return {
           mainBody: "",
+          mainBodyType:"",
           principal: "",
           contacts: "",
           town: "",
@@ -102,6 +107,7 @@ export default {
         console.log(err);
         alert("获取分类异常");
       });
+      this.bodyTypes=new Array('大户','合作社','企业');
   }
 };
 </script>
