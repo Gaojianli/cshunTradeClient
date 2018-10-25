@@ -10,6 +10,10 @@
         <v-text-field label="乡镇" v-model="form.town" :disabled="!editable"></v-text-field>
         <v-text-field label="所在村（社区）" v-model="form.street" :disabled="!editable"></v-text-field>
         <v-text-field label="种植面积" suffix="亩" v-model="form.area" :disabled="!editable"></v-text-field>
+        <v-radio-group row label="是否连片500亩以上:" v-model="form.largerThan500">
+          <v-radio style="margin-left:20px" label="是" value="true"></v-radio>
+          <v-radio label="否" value="false"></v-radio>
+        </v-radio-group>
         <v-text-field label="预计总产量" suffix="斤" v-model="form.yield" :disabled="!editable"></v-text-field>
         <v-select :items="schema" label="一级品种分类" v-model="form.category" :disabled="!editable"></v-select>
         <v-text-field label="二级品种分类" v-model="form.categorySecondary" :disabled="!editable"></v-text-field>
@@ -42,6 +46,8 @@
           <v-radio label="否" value="false"></v-radio>
         </v-radio-group>
         <v-text-field label="保本销售价格" prefix="￥" suffix="元/每斤" v-model="form.minPrice" :disabled="!editable"></v-text-field>
+        <v-text-field label="销售联系人" v-model="form.contacter"></v-text-field>
+        <v-text-field label="销售负责人" v-model="form.responsible"></v-text-field>
       </v-form>
     </v-flex>
     <!-- btn -->
@@ -78,7 +84,10 @@ export default {
           marketBeginDate: "",
           marketEndDate: "",
           hasCoolStore: false,
-          minPrice: 0
+          minPrice: 0,
+          largerThan500:false,
+          contacter:"",
+          responsible:""
         };
       }
     },
