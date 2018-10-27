@@ -7,17 +7,17 @@
         <v-select :items="bodyTypes" label="主体类型" v-model="form.mainBodyType" :disabled="!editable"></v-select>
         <v-text-field label="主体负责人" v-model="form.principal" :disabled="!editable"></v-text-field>
         <v-text-field label="主体负责人联系方式" v-model="form.contacts" :disabled="!editable"></v-text-field>
+        <v-select :items="schema" label="一级品种分类" v-model="form.category" :disabled="!editable"></v-select>
+        <v-text-field label="二级品种分类" v-model="form.categorySecondary" :disabled="!editable"></v-text-field>
         <v-text-field label="乡镇" v-model="form.town" :disabled="!editable"></v-text-field>
         <v-text-field label="所在村（社区）" v-model="form.street" :disabled="!editable"></v-text-field>
         <v-text-field label="种植面积" suffix="亩" v-model="form.area" :disabled="!editable"></v-text-field>
+        <!-- 种植日期 -->
         <v-radio-group row label="是否连片500亩以上:" v-model="form.largerThan500">
           <v-radio style="margin-left:20px" label="是" value="true"></v-radio>
           <v-radio label="否" value="false"></v-radio>
         </v-radio-group>
         <v-text-field label="预计总产量" suffix="斤" v-model="form.yield" :disabled="!editable"></v-text-field>
-        <v-select :items="schema" label="一级品种分类" v-model="form.category" :disabled="!editable"></v-select>
-        <v-text-field label="二级品种分类" v-model="form.categorySecondary" :disabled="!editable"></v-text-field>
-        <!-- 种植日期 -->
         <v-dialog ref="dialog" v-model="modal.plant_date" :persistent="editable" lazy full-width
           width="290px">
           <v-text-field slot="activator" v-model="form.plantDate" label="种植时间" prepend-icon="fas fa-calendar-alt"
