@@ -134,7 +134,6 @@ export default {
         console.log(err);
         alert("获取乡镇列表失败");
       });
-
     this.bodyTypes = new Array("大户", "合作社", "企业");
   },
   methods: {
