@@ -7,12 +7,12 @@
         <v-select :items='["大户","合作社","企业"]' label="主体类型" v-model="form.mainBodyType" :disabled="!editable"></v-select>
         <v-text-field label="主体负责人" v-model="form.principal" :disabled="!editable"></v-text-field>
         <v-text-field label="主体负责人联系方式" v-model="form.contacts" :disabled="!editable"></v-text-field>
+        <v-select :items="schema" label="品种" v-model="form.category" :disabled="!editable"></v-select>
+        <v-text-field label="二级品种" v-model="form.categorySecondary" :disabled="!editable"></v-text-field>
         <v-text-field label="乡镇" v-model="form.town" :disabled="!editable"></v-text-field>
         <v-text-field label="所在村（社区）" v-model="form.street" :disabled="!editable"></v-text-field>
         <v-text-field label="规模数量" suffix="个" v-model="form.area" :disabled="!editable"></v-text-field>
         <v-text-field label="预计总产量" suffix="个" v-model="form.yield" :disabled="!editable"></v-text-field>
-        <v-select :items="schema" label="品种" v-model="form.category" :disabled="!editable"></v-select>
-        <v-text-field label="二级品种" v-model="form.categorySecondary" :disabled="!editable"></v-text-field>
         <!-- 投苗时间 -->
         <v-dialog ref="dialog" v-model="modal.seed_date" :persistent="editable" lazy full-width
           width="290px">
