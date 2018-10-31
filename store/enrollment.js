@@ -1,14 +1,14 @@
 export const state = () => ({
-  VegEnrollment: [],
-  AnimalEnrollment: []
+  PlantingEnrollment: [],
+  BreedEnrollment: []
 })
 
 export const mutations = {
-  update_vegEnrollments(state, _vegEnrollments) {
-    state.VegEnrollment = _vegEnrollments;
+  update_plantingEnrollments(state, _plantingEnrollments) {
+    state.PlantingEnrollment = _plantingEnrollments;
   },
-  update_animalEnrollments(state, _animalEnrollments) {
-    state.AnimalEnrollment = _animalEnrollments;
+  update_breedEnrollments(state, _breedEnrollments) {
+    state.BreedEnrollment = _breedEnrollments;
   }
 }
 
@@ -21,11 +21,11 @@ export const actions = {
   /**
    * 创建果蔬类登记
    */
-  create_vegEnrollment({ dispatch, commit }, _vegEnrollmentData) {
+  create_plantingEnrollment({ dispatch, commit }, _plantingEnrollmentData) {
     return new Promise((resolve, reject) => {
-      this.$axios.post('/vegEnrollment', _vegEnrollmentData)
+      this.$axios.post('/api/planting_enrollments/', _plantingEnrollmentData)
         .then(({ data }) => {
-          dispatch('read_vegEnrollments') //创建成功更新登记信息
+          dispatch('read_plantingEnrollments') //创建成功更新登记信息
             .then(() => {
               resolve();
             })
@@ -38,10 +38,11 @@ export const actions = {
   /**
    * 获取果蔬类登记信息
    */
-  read_vegEnrollments({ dispatch, commit }) {
+  read_plantingEnrollments({ dispatch, commit }) {
     return new Promise((resolve, reject) => {
-      this.$axios.get('/vegEnrollment')
+      this.$axios.get('/api/planting_enrollments/')
         .then(({ data }) => {
+          console.log(data[0]);
           let _data = data.map((item) => {
             /**
              * 格式化时间字符串
@@ -58,7 +59,7 @@ export const actions = {
               marketEndDate: formatDate(item.marketEndDate),
             }
           });
-          commit('update_vegEnrollments', _data);
+          commit('update_plantingEnrollments', _data);
           resolve();
         })
         .catch(err => {
@@ -70,11 +71,11 @@ export const actions = {
   /**
    * 删除果蔬类登记
    */
-  delete_vegEnrollments({ dispatch, commit }, id) {
+  delete_plantingEnrollments({ dispatch, commit }, id) {
     return new Promise((resolve, reject) => {
-      this.$axios.$delete(`/vegEnrollment/${id}`)
+      this.$axios.$delete(`/api/planting_enrollments/${id}/`)
         .then(() => {
-          dispatch('read_vegEnrollments')
+          dispatch('read_plantingEnrollments')
             .then(() => {
               resolve();
             })
@@ -87,11 +88,11 @@ export const actions = {
   /**
    * 更新蔬果类登记
    */
-  update_vegEnrollment({ dispatch, commit }, erm) {
+  update_plantingEnrollment({ dispatch, commit }, erm) {
     return new Promise((resolve, reject) => {
-      this.$axios.$put(`/vegEnrollment/${erm.id}`, erm)
+      this.$axios.$put(`/api/planting_enrollments/${erm.id}/`, erm)
         .then(() => {
-          dispatch('read_vegEnrollments') //修改成功更新登记信息
+          dispatch('read_plantingEnrollments') //修改成功更新登记信息
             .then(() => {
               resolve();
             })
@@ -106,9 +107,9 @@ export const actions = {
   /**
    * 获取牲畜登记信息
    */
-  read_animalEnrollments({ commit }) {
+  read_breedEnrollments({ commit }) {
     return new Promise((resolve, reject) => {
-      this.$axios.get('/animalEnrollment')
+      this.$axios.get('/api/breed_enrollments/')
         .then(({ data }) => {
           let _data = data.map((item) => {
             /**
@@ -125,7 +126,7 @@ export const actions = {
               outOfBarDate: formatDate(item.outOfBarDate),
             }
           });
-          commit('update_animalEnrollments', _data);
+          commit('update_breedEnrollments', _data);
           resolve();
         })
         .catch(err => {
@@ -137,11 +138,11 @@ export const actions = {
   /**
    * 创建牲畜类登记
    */
-  create_animalEnrollment({ dispatch, commit }, _animalEnrollmentData) {
+  create_breedEnrollment({ dispatch, commit }, _breedEnrollmentData) {
     return new Promise((resolve, reject) => {
-      this.$axios.post('/animalEnrollment', _animalEnrollmentData)
+      this.$axios.post('/api/breed_enrollments/', _breedEnrollmentData)
         .then(({ data }) => {
-          dispatch('read_animalEnrollments') //创建成功更新登记信息
+          dispatch('read_breedEnrollments') //创建成功更新登记信息
             .then(() => {
               resolve();
             })
@@ -154,11 +155,11 @@ export const actions = {
   /**
    * 删除牲畜类登记
    */
-  delete_animalEnrollments({ dispatch, commit }, id) {
+  delete_breedEnrollments({ dispatch, commit }, id) {
     return new Promise((resolve, reject) => {
-      this.$axios.$delete(`/animalEnrollment/${id}`)
+      this.$axios.$delete(`/api/breed_enrollments/${id}/`)
         .then(() => {
-          dispatch('read_animalEnrollments')
+          dispatch('read_breedEnrollments')
             .then(() => {
               resolve();
             })
@@ -171,11 +172,11 @@ export const actions = {
   /**
    * 更新牲畜类登记
    */
-  update_animalEnrollment({ dispatch, commit }, erm) {
+  update_breedEnrollment({ dispatch, commit }, erm) {
     return new Promise((resolve, reject) => {
-      this.$axios.$put(`/animalEnrollment/${erm.id}`, erm)
+      this.$axios.$put(`/api/breed_enrollments/${erm.id}/`, erm)
         .then(() => {
-          dispatch('read_animalEnrollments') //修改成功更新登记信息
+          dispatch('read_breedEnrollments') //修改成功更新登记信息
             .then(() => {
               resolve();
             })

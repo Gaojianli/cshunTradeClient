@@ -3,98 +3,96 @@ const pkg = require('./package')
 const nodeExternals = require('webpack-node-externals')
 
 module.exports = {
-    mode: 'spa',
+  mode: 'spa',
 
+  /*
+   ** Headers of the page
+   */
+  head: {
+    title: pkg.name,
+    meta: [{
+      charset: 'utf-8'
+    },
+    {
+      name: 'viewport',
+      content: 'width=device-width, initial-scale=1'
+    },
+    {
+      hid: 'description',
+      name: 'description',
+      content: pkg.description
+    }],
+    link: [{
+      rel: 'icon',
+      type: 'image/x-icon',
+      href: '/favicon.ico'
+    },
+    {
+      rel: 'stylesheet',
+      href: 'https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons'
+    }]
+  },
+
+  /*
+   ** Customize the progress-bar color
+   */
+  loading: {
+    color: '#FFFFFF'
+  },
+
+  /*
+   ** Global CSS
+   */
+  css: [
+    'vuetify/src/stylus/main.styl'
+  ],
+
+  /*
+   ** Plugins to load before mounting the App
+   */
+  plugins: [
+    '@/plugins/vuetify'
+  ],
+
+  /*
+   ** Nuxt.js modules
+   */
+  modules: [
+    // Doc: https://github.com/nuxt-community/axios-module#usage
+    '@nuxtjs/axios'
+  ],
+  /*
+   ** Axios module configuration
+   */
+  axios: {
+    // See https://github.com/nuxt-community/axios-module#options
+    host: '58.87.119.20',
+    port: 1000,
+    https: false,
+  },
+
+  /**
+   * 路由中间件
+   */
+  router: {
+    middleware: 'auth'
+  },
+  /*
+   ** Build configuration
+   */
+  build: {
     /*
-     ** Headers of the page
+     ** You can extend webpack config here
      */
-    head: {
-        title: pkg.name,
-        meta: [{
-                charset: 'utf-8'
-            },
-            {
-                name: 'viewport',
-                content: 'width=device-width, initial-scale=1'
-            },
-            {
-                hid: 'description',
-                name: 'description',
-                content: pkg.description
-            }
-        ],
-        link: [{
-                rel: 'icon',
-                type: 'image/x-icon',
-                href: '/favicon.ico'
-            },
-            {
-                rel: 'stylesheet',
-                href: 'https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons'
-            }
+    extend(config, ctx) {
+
+      if (ctx.isServer) {
+        config.externals = [
+          nodeExternals({
+            whitelist: [/^vuetify/]
+          })
         ]
-    },
-
-    /*
-     ** Customize the progress-bar color
-     */
-    loading: {
-        color: '#FFFFFF'
-    },
-
-    /*
-     ** Global CSS
-     */
-    css: [
-        'vuetify/src/stylus/main.styl'
-    ],
-
-    /*
-     ** Plugins to load before mounting the App
-     */
-    plugins: [
-        '@/plugins/vuetify'
-    ],
-
-    /*
-     ** Nuxt.js modules
-     */
-    modules: [
-        // Doc: https://github.com/nuxt-community/axios-module#usage
-        '@nuxtjs/axios'
-    ],
-    /*
-     ** Axios module configuration
-     */
-    axios: {
-        // See https://github.com/nuxt-community/axios-module#options
-        host: '123.206.51.42/api/api/',
-        port: 80,
-        https: false
-    },
-
-    /**
-     * 路由中间件
-     */
-    router: {
-        middleware: 'auth'
-    },
-    /*
-     ** Build configuration
-     */
-    build: {
-        /*
-         ** You can extend webpack config here
-         */
-        extend(config, ctx) {
-
-            if (ctx.isServer) {
-                config.externals = [
-                    nodeExternals({
-                        whitelist: [/^vuetify/]
-                    })
-                ]
-            }
-        }
+      }
     }
+  }
 }

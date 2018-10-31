@@ -52,13 +52,14 @@ export const actions = {
     username,
     password
   }) {
-    return this.$axios.post("/login", {
+    return this.$axios.post("/api-token-auth/", {
         username,
         password
       })
       .then(({ data }) => {
-        const { token } = data
-        this.$axios.setToken(token, 'Bearer');
+        const token = data.token;
+        console.log(token);
+        this.$axios.setToken(token, 'JWT');
         sessionStorage.setItem('token', token);
       })
       .then(() => {
@@ -73,25 +74,39 @@ export const actions = {
       })
   },
   /**
-   * 根据token获取用户信息
+   * 根据token获取用户信息 FIXME:get my fucking data
    */
   me({ commit }, token) {
     return new Promise((resolve, reject) => {
-      this.$axios.get(`/me`, token ? {
-          headers: {
-            authorization: `Bearer ${token}`
-          }
-        } : {})
-        .then(({ data }) => {
-          console.log(data);
-          if (token) this.$axios.setToken(token, 'Bearer'); //第一次登陆的时候在login里面setToken
-          commit('update', data);
-          resolve();
-        })
-        .catch(err => {
-          console.log(err);
-          reject();
-        })
+      // this.$axios.get(`/users/${token}`, token ? {
+      //     headers: {
+      //       Authorization: `JWT ${token}`
+      //     }
+      //   } : {})
+      //   .then(({ data }) => {
+      //     console.log(data);
+      //     if (token) this.$axios.setToken(token, 'JWT'); //第一次登陆的时候在login里面setToken
+      //     commit('update', data);
+      //     resolve();
+      //   })
+      //   .catch(err => {
+      //     console.log(err);
+      //     reject();
+      //   })
+      let mook = {
+        username: '瞎猜的',
+        adminLevel: 'Super',
+        createdAt: 'today',
+        name: '鬼知道',
+        phone: 123456789,
+        street: '小西天',
+        town: '狮子坟',
+        updatedAt: 'yesterday',
+        districtsRW: '??',
+        id: 0,
+      }
+      commit('update', mook);
+      resolve();
     })
   },
   /**
