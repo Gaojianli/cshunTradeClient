@@ -7,10 +7,11 @@
       <v-tab-item>
         <v-layout justify-center column>
           <v-flex xs12>
-            <VegEnroll v-if="$store.state.active_enrollment.type == 'veg'" :editable="meta_editable"
-              :init_form="meta" @save="saveEnrollment" :loading="loading" />
-            <AnimalEnroll v-else :editable="meta_editable" :init_form="meta" @save="saveEnrollment"
+            <VegEnroll v-if="$store.state.active_enrollment.type == 'planting'"
+              :editable="meta_editable" :init_form="meta" @save="saveEnrollment"
               :loading="loading" />
+            <AnimalEnroll v-else :editable="meta_editable" :init_form="meta"
+              @save="saveEnrollment" :loading="loading" />
           </v-flex>
           <v-flex v-if="!meta_editable">
             <v-btn flat @click="meta_editable = true">编辑登记</v-btn>
@@ -22,25 +23,37 @@
       <v-tab-item>
         <v-layout column>
           <v-flex xs12>
-            <v-checkbox label="是否有订单" v-model="has_order" :disabled="orders.length > 0"></v-checkbox>
+            <v-radio-group row label="是否有订单:" v-model="has_order" :disabled="orders.length > 0">
+              <v-radio label="是" :value="true"></v-radio>
+              <v-radio label="否" :value="false"></v-radio>
+            </v-radio-group>
           </v-flex>
           <!-- 订单列表 -->
           <v-flex>
             <v-card flat class="transparent">
               <v-list three-line>
                 <template v-for="item in orders">
-                  <v-list-tile :key="item.id">
+                  <v-list-tile :key="item.id" class="py-2">
                     <v-list-tile-content>
-                      <v-list-tile-title>{{item.address}}</v-list-tile-title>
+                      <!-- if breed show product -->
+                      <v-list-tile-title v-if="type == 'breed'">产品：{{computeProductName(item.breed_product)}}</v-list-tile-title>
+                      <v-list-tile-title>地址：{{item.order_source_address}}</v-list-tile-title>
                       <v-list-tile-sub-title>价格：{{item.price}}</v-list-tile-sub-title>
-                      <v-list-tile-sub-title>模式：{{modes.find((x)=>{return x.value == item.saleMode}).name}}</v-list-tile-sub-title>
+                      <v-list-tile-sub-title>
+                        模式：{{modes.find((x)=>{return x.value ==
+                        item.sale_model}).name}}
+                      </v-list-tile-sub-title>
+                      <v-list-tile-sub-title>{{item.is_overseas ? '境外订单' :
+                        '境内订单'}}</v-list-tile-sub-title>
                     </v-list-tile-content>
                     <v-list-tile-action>
                       <v-btn icon ripple>
-                        <v-icon color="blue darken-1" class="list-icon" @click="editOrder(item)">fas fa-pen</v-icon>
+                        <v-icon color="blue darken-1" class="list-icon" @click="editOrder(item)">fas
+                          fa-pen</v-icon>
                       </v-btn>
                       <v-btn icon ripple>
-                        <v-icon color="red" class="list-icon" @click="deleteOrder(item)">fas fa-trash-alt</v-icon>
+                        <v-icon color="red" class="list-icon" @click="deleteOrder(item)">fas
+                          fa-trash-alt</v-icon>
                       </v-btn>
                     </v-list-tile-action>
                   </v-list-tile>
@@ -58,14 +71,24 @@
         </v-layout>
       </v-tab-item>
       <!-- 订单表单 -->
-      <v-dialog persistent v-model="active">
+      <v-dialog persistent v-model="active" fullscreen>
         <v-card>
           <v-card-text>
             <v-form>
-              <v-text-field label="地址" v-model="form_data.address"></v-text-field>
+              <!-- if breed choose product -->
+              <v-select v-if="type == 'breed'" :items="meta.breed_products"
+                label="对应产品" v-model="form_data.breed_product" :item-text="'name'"
+                :item-value="'id'"></v-select>
               <v-text-field label="价格" v-model="form_data.price"></v-text-field>
-              <v-select :items="modes" v-model="form_data.saleMode" item-text="name" item-value="value"
-                label="登记类型"></v-select>
+              <v-select :items="modes" v-model="form_data.sale_model" item-text="name"
+                item-value="value" label="价格类型"></v-select>
+              <v-text-field label="订单来源类型" v-model="form_data.order_source_type"></v-text-field>
+              <v-text-field label="具体订单来源" v-model="form_data.order_source_name"></v-text-field>
+              <v-radio-group row label="是否境外订单:" v-model="form_data.is_overseas">
+                <v-radio label="是" :value="true"></v-radio>
+                <v-radio label="否" :value="false"></v-radio>
+              </v-radio-group>
+              <v-textarea label="地址" v-model="form_data.order_source_address"></v-textarea>
             </v-form>
           </v-card-text>
           <v-card-actions>
@@ -88,29 +111,30 @@ export default {
     let { type, id } = ctx.store.state.active_enrollment;
     let meta;
     //获取登记元信息
-    if (type == "veg")
+    if (type == "planting")
       meta = Object.assign(
         {},
-        ctx.store.state.enrollment.VegEnrollment.find(x => {
+        ctx.store.state.enrollment.PlantingEnrollment.find(x => {
           return x.id == id;
         })
       );
     else
       meta = Object.assign(
         {},
-        ctx.store.state.enrollment.AnimalEnrollment.find(x => {
+        ctx.store.state.enrollment.BreedEnrollment.find(x => {
           return x.id == id;
         })
       );
     //获取登记订单信息
     ctx.$axios
-      .$get(`/${type}Enrollment/${id}/orders`)
+      .$get(`/api/${type}_enrollment_orders/?enrollment=${id}`)
       .then(data => {
         console.log(data);
         cb(null, {
           orders: data,
           meta: meta,
-          has_order: data.length > 0 ? true : false
+          has_order: data.length > 0 ? true : false,
+          type: type
         });
       })
       .catch(err => {
@@ -127,15 +151,18 @@ export default {
       loading: false,
       meta_editable: false,
       form_data: {
-        address: "",
-        price: null,
-        saleMode: "",
+        order_source_type: "",
+        order_source_name: "",
+        order_source_address: "",
+        is_overseas: false,
+        price: "",
+        sale_model: "",
         id: null
       },
       modes: [
-        { name: "固定价格", value: "Fixed" },
-        { name: "市场价格", value: "Market" },
-        { name: "保底价格 + 市场价格", value: "SafeMarket" }
+        { name: "固定价格", value: "fixed" },
+        { name: "市场价格", value: "market" },
+        { name: "保底价格 + 市场价格", value: "safe_market" }
       ]
     };
   },
@@ -146,7 +173,7 @@ export default {
     fetchOrders() {
       let { type, id } = this.$store.state.active_enrollment;
       this.$axios
-        .$get(`/${type}Enrollment/${id}/orders`)
+        .$get(`/api/${type}_enrollment_orders/?enrollment=${id}`)
         .then(data => {
           this.orders = data;
         })
@@ -163,8 +190,12 @@ export default {
       let { type, id } = this.$store.state.active_enrollment;
       if (!this.form_data.id) {
         //新建订单
+        this.form_data.enrollment = id;
         this.$axios
-          .$post(`/${type}Enrollment/${id}/orders`, this.form_data)
+          .$post(
+            `/api/${type}_enrollment_orders/?enrollment=${id}`,
+            this.form_data
+          )
           .then(() => {
             this.loading = false;
             this.fetchOrders();
@@ -179,7 +210,7 @@ export default {
         //修改订单
         this.$axios
           .$put(
-            `/${type}Enrollment/${id}/orders/${this.form_data.id}`,
+            `/api/${type}_enrollment_orders/${this.form_data.id}/`,
             this.form_data
           )
           .then(() => {
@@ -197,20 +228,30 @@ export default {
      * 取消创建订单
      */
     cancelDialog() {
-      this.form_data.address = "";
-      this.form_data.price = null;
-      this.form_data.saleMode = "";
-      this.form_data.id = null;
+      let { type, id } = this.$store.state.active_enrollment;
+      if (type == "breed") this.form_data.breed_product = null;
       this.active = false;
+      this.form_data.order_source_type = "";
+      this.form_data.order_source_name = "";
+      this.form_data.order_source_address = "";
+      this.form_data.is_overseas = false;
+      this.form_data.price = "";
+      this.form_data.sale_model = "";
+      this.form_data.id = null;
     },
     /**
      * 编辑订单
      */
     editOrder(item) {
+      let { type, id } = this.$store.state.active_enrollment;
+      if (type == "breed") this.form_data.breed_product = item.breed_product;
       this.form_data.id = item.id;
-      this.form_data.address = item.address;
+      this.form_data.order_source_type = item.order_source_type;
+      this.form_data.order_source_name = item.order_source_name;
+      this.form_data.order_source_address = item.order_source_address;
+      this.form_data.is_overseas = item.is_overseas;
       this.form_data.price = item.price;
-      this.form_data.saleMode = item.saleMode;
+      this.form_data.sale_model = item.sale_model;
       this.active = true;
     },
     /**
@@ -219,7 +260,7 @@ export default {
     deleteOrder(item) {
       let { type, id } = this.$store.state.active_enrollment;
       this.$axios
-        .$delete(`/${type}Enrollment/${id}/orders/${item.id}`)
+        .$delete(`/api/${type}_enrollment_orders/${item.id}`)
         .then(() => {
           this.fetchOrders();
         })
@@ -263,7 +304,17 @@ export default {
         .catch(err => {
           alert("保存失败");
         });
+    },
+    computeProductName(index) {
+      let product = this.meta.breed_products.find(x => {
+        return x.id == index;
+      });
+      if (product) return product.name;
+      else return "";
     }
+  },
+  mounted() {
+    this.cancelDialog();
   }
 };
 </script>

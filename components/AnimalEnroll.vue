@@ -3,39 +3,60 @@
     <!-- form -->
     <v-flex xs12>
       <v-form v-model="valid">
-        <v-text-field label="生产主体" v-model="form.mainBody" :disabled="!editable"></v-text-field>
-        <v-select :items='["大户","合作社","企业"]' label="主体类型" v-model="form.mainBodyType" :disabled="!editable"></v-select>
+        <v-text-field label="生产主体" v-model="form.main_body" :disabled="!editable"></v-text-field>
+        <v-select :items="main_body_items" :item-text="'name'" label="主体类型"
+          v-model="form.main_body_type" :disabled="!editable"></v-select>
         <v-text-field label="主体负责人" v-model="form.principal" :disabled="!editable"></v-text-field>
-        <v-text-field label="主体负责人联系方式" v-model="form.contacts" :disabled="!editable"></v-text-field>
-        <v-text-field label="乡镇" v-model="form.town" :disabled="!editable"></v-text-field>
-        <v-text-field label="所在村（社区）" v-model="form.street" :disabled="!editable"></v-text-field>
-        <v-text-field label="规模数量" suffix="个" v-model="form.area" :disabled="!editable"></v-text-field>
-        <v-text-field label="预计总产量" suffix="个" v-model="form.yield" :disabled="!editable"></v-text-field>
-        <v-select :items="schema" label="品种" v-model="form.category" :disabled="!editable"></v-select>
-        <v-text-field label="二级品种" v-model="form.categorySecondary" :disabled="!editable"></v-text-field>
+        <v-text-field label="主体负责人联系方式" v-model="form.principal_phone"
+          :disabled="!editable"></v-text-field>
+        <v-text-field label="销售负责人" v-model="form.sale_manager" :disabled="!editable"></v-text-field>
+        <v-text-field label="销售负责人联系方式" v-model="form.sale_manager_phone"
+          :disabled="!editable"></v-text-field>
+        <v-select :items="schema" :item-text="'name'" :item-value="'name'"
+          label="品种" v-model="form.category" :disabled="!editable"></v-select>
+        <v-text-field label="二级品种" v-model="form.category_secondary" :disabled="!editable"></v-text-field>
+        <v-select :items="towns" label="乡镇" v-model="form.village" :disabled="!editable"
+          @input="getStreetList"></v-select>
+        <v-select :items="streets" label="所在村（社区）" v-model="form.street"
+          :disabled="!form.village || !editable"></v-select>
+        <v-text-field label="养殖数量" v-model="form.quantity" :disabled="!editable"></v-text-field>
         <!-- 投苗时间 -->
-        <v-dialog ref="dialog" v-model="modal.seed_date" :persistent="editable" lazy full-width
-          width="290px">
-          <v-text-field slot="activator" v-model="form.seedlingDate" label="投苗时间" prepend-icon="fas fa-calendar-alt"
-            readonly :disabled="!editable"></v-text-field>
-          <v-date-picker v-model="form.seedlingDate" scrollable @input="modal.seed_date = false"
+        <v-dialog ref="dialog" v-model="modal.seed_date" :persistent="editable"
+          lazy full-width width="290px">
+          <v-text-field slot="activator" v-model="form.seedling_date" label="投苗时间"
+            prepend-icon="fas fa-calendar-alt" readonly :disabled="!editable"></v-text-field>
+          <v-date-picker v-model="form.seedling_date" scrollable @input="modal.seed_date = false"
             locale="zh-cn" color="orange lighten-1" :readonly="!editable"></v-date-picker>
         </v-dialog>
         <!-- 出栏时间 -->
-        <v-dialog ref="dialog" v-model="modal.out_date" :persistent="editable" lazy full-width
-          width="290px">
-          <v-text-field slot="activator" v-model="form.outOfBarDate" label="出栏时间" prepend-icon="fas fa-calendar-alt"
-            readonly :disabled="!editable"></v-text-field>
-          <v-date-picker v-model="form.outOfBarDate" scrollable @input="modal.out_date = false"
+        <v-dialog ref="dialog" v-model="modal.out_date" :persistent="editable"
+          lazy full-width width="290px">
+          <v-text-field slot="activator" v-model="form.out_of_bar_date" label="出栏时间"
+            prepend-icon="fas fa-calendar-alt" readonly :disabled="!editable"></v-text-field>
+          <v-date-picker v-model="form.out_of_bar_date" scrollable @input="modal.out_date = false"
             locale="zh-cn" color="orange lighten-1" :readonly="!editable"></v-date-picker>
         </v-dialog>
 
-        <v-text-field label="出栏数量" v-model="form.outOfBarCount" :disabled="!editable"></v-text-field>
-       <v-radio-group row label="是否有冷链存储:" v-model="form.hasCoolStore">
-          <v-radio label="是" value="true"></v-radio>
-          <v-radio label="否" value="false"></v-radio>
+        <v-radio-group row label="是否有冷链存储:" v-model="form.has_cool_store"
+          :disabled="!editable">
+          <v-radio label="是" :value="true"></v-radio>
+          <v-radio label="否" :value="false"></v-radio>
         </v-radio-group>
-        <v-text-field label="保本销售价格" prefix="￥" suffix="元/每个" v-model="form.minPrice" :disabled="!editable"></v-text-field>
+
+        <v-divider></v-divider>
+        <v-card v-for="(item, n) in form.breed_products" :key="n" class="my-2">
+          <!-- use key will cause rerender, I HAVE to ignore this -->
+          <v-card-title primary-title>
+            <v-text-field label="产品名称" v-model="item.name" :disabled="!editable"></v-text-field>
+            <v-text-field label="预计总产量" v-model="item.yield_out" :disabled="!editable"></v-text-field>
+            <v-text-field label="保本销售价格" v-model="item.min_price" :disabled="!editable"
+              :suffix="'元'"></v-text-field>
+          </v-card-title>
+          <v-card-actions>
+            <v-btn flat color="red" v-if="editable" @click="delete_product(n)">删除产品</v-btn>
+          </v-card-actions>
+        </v-card>
+        <v-btn block @click="append_product" v-if="editable">新增产品</v-btn>
       </v-form>
     </v-flex>
     <!-- btn -->
@@ -57,22 +78,21 @@ export default {
       type: Object,
       default: () => {
         return {
-          mainBody: "",
-          mainBodyType:"",
+          main_body: "",
+          main_body_type: "",
           principal: "",
-          contacts: "",
-          town: "",
+          principal_phone: "",
+          sale_manager: "",
+          sale_manager_phone: "",
+          village: "",
           street: "",
-          location: {},
           category: "",
-          categorySecondary: "",
-          seedlingDate: "",
-          outOfBarDate: "",
-          outOfBarCount: null,
-          hasCoolStore: false,
-          minPrice: 0,
-          area: null,
-          yield: null
+          category_secondary: "",
+          seedling_date: "",
+          out_of_bar_date: "",
+          quantity: null,
+          has_cool_store: false,
+          breed_products: []
         };
       }
     },
@@ -91,15 +111,31 @@ export default {
         out_date: false
       },
       form: this.init_form,
-      schema: []
+      schema: [],
+      towns: [],
+      streets: [],
+      main_body_items: [
+        {
+          name: "大户",
+          value: "fam"
+        },
+        {
+          name: "合作社",
+          value: "coo"
+        },
+        {
+          name: "企业",
+          value: "com"
+        }
+      ]
     };
   },
   mounted() {
     /**
-     * 获取果蔬登记一级分类
+     * 获取牲畜登记一级分类
      */
     this.$axios
-      .$get("configs/AnimalCategories")
+      .$get("/api/breed_enrollment_categories/")
       .then(data => {
         this.schema = data;
       })
@@ -107,13 +143,49 @@ export default {
         console.log(err);
         alert("获取分类异常");
       });
-      this.bodyTypes=new Array('大户','合作社','企业');
+    this.$axios
+      .$get("/api/users/all_villages/")
+      .then(data => {
+        this.towns = data;
+      })
+      .catch(err => {
+        console.log(err);
+        alert("获取乡镇列表失败");
+      });
+    this.bodyTypes = new Array("大户", "合作社", "企业");
+    this.getStreetList();
+  },
+  methods: {
+    getStreetList: function() {
+      this.$axios
+        .$get("/api/users/all_streets/?village=" + this.form.village)
+        .then(data => {
+          this.streets = data;
+        })
+        .catch(err => {
+          console.log(err);
+          alert("获取社区列表失败");
+        });
+    },
+    append_product() {
+      this.form.breed_products.push({
+        name: "",
+        yield_out: "",
+        min_price: ""
+      });
+    },
+    delete_product(i) {
+      this.form.breed_products.splice(i, 1);
+    }
   }
 };
 </script>
 
 <style>
 div.v-input__slot > div > input[type="text"] {
+  color: #333;
+}
+.v-select__selection.v-select__selection--comma.v-select__selection--disabled {
   color: #333;
 }
 </style>

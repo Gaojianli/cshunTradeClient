@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <v-toolbar style="z-index:999;" dense dark class="main-header">
+    <v-toolbar dense dark class="main-header">
       <v-toolbar-title>产销对接系统</v-toolbar-title>
       <v-spacer></v-spacer>
       <v-toolbar-items>
@@ -8,7 +8,7 @@
         <router-link to="/enroll" tag="v-btn" class="v-btn--flat">登记</router-link>
       </v-toolbar-items>
     </v-toolbar>
-    <nuxt/>
+    <nuxt />
   </v-app>
 </template>
 
