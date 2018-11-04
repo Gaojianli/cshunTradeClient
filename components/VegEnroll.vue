@@ -17,11 +17,12 @@
         <v-select :items="towns" label="乡镇" v-model="form.village" :disabled="!editable"
           @input="getStreetList"></v-select>
         <v-select :items="streets" label="所在村（社区）" v-model="form.street"
-          :disabled="!form.village"></v-select>
+          :disabled="!form.village || !editable"></v-select>
         <v-text-field label="种植面积" suffix="亩" v-model="form.area" :disabled="!editable"></v-text-field>
-        <v-radio-group row label="是否连片500亩以上:" v-model="form.larger_than_500_acres">
-          <v-radio style="margin-left:20px" label="是" value="true"></v-radio>
-          <v-radio label="否" value="false"></v-radio>
+        <v-radio-group row label="是否连片500亩以上:" v-model="form.larger_than_500_acres"
+          :disabled="!editable">
+          <v-radio style="margin-left:20px" label="是" :value="true"></v-radio>
+          <v-radio label="否" :value="false"></v-radio>
         </v-radio-group>
         <v-text-field label="预计总产量" suffix="斤" v-model="form.yield_out"
           :disabled="!editable"></v-text-field>
@@ -49,9 +50,10 @@
           <v-date-picker v-model="form.market_end_date" scrollable @input="modal.end_date = false"
             locale="zh-cn" color="success" :readonly="!editable"></v-date-picker>
         </v-dialog>
-        <v-radio-group row label="是否有冷链存储:" v-model="form.has_cool_store">
-          <v-radio style="margin-left:20px" label="是" value="true"></v-radio>
-          <v-radio label="否" value="false"></v-radio>
+        <v-radio-group row label="是否有冷链存储:" v-model="form.has_cool_store"
+          :disabled="!editable">
+          <v-radio style="margin-left:20px" label="是" :value="true"></v-radio>
+          <v-radio label="否" :value="false"></v-radio>
         </v-radio-group>
         <v-text-field label="保本销售价格" prefix="￥" suffix="元/每斤" v-model="form.min_price"
           :disabled="!editable"></v-text-field>
@@ -157,6 +159,7 @@ export default {
         alert("获取乡镇列表失败");
       });
     this.bodyTypes = new Array("大户", "合作社", "企业");
+    this.getStreetList();
   },
   methods: {
     getStreetList: function() {

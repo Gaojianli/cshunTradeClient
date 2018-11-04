@@ -18,7 +18,7 @@
         <v-select :items="towns" label="乡镇" v-model="form.village" :disabled="!editable"
           @input="getStreetList"></v-select>
         <v-select :items="streets" label="所在村（社区）" v-model="form.street"
-          :disabled="!form.village"></v-select>
+          :disabled="!form.village || !editable"></v-select>
         <v-text-field label="养殖数量" v-model="form.quantity" :disabled="!editable"></v-text-field>
         <!-- 投苗时间 -->
         <v-dialog ref="dialog" v-model="modal.seed_date" :persistent="editable"
@@ -37,9 +37,10 @@
             locale="zh-cn" color="orange lighten-1" :readonly="!editable"></v-date-picker>
         </v-dialog>
 
-        <v-radio-group row label="是否有冷链存储:" v-model="form.has_cool_store">
-          <v-radio label="是" value="true"></v-radio>
-          <v-radio label="否" value="false"></v-radio>
+        <v-radio-group row label="是否有冷链存储:" v-model="form.has_cool_store"
+          :disabled="!editable">
+          <v-radio label="是" :value="true"></v-radio>
+          <v-radio label="否" :value="false"></v-radio>
         </v-radio-group>
 
         <v-divider></v-divider>
@@ -52,10 +53,10 @@
               :suffix="'元'"></v-text-field>
           </v-card-title>
           <v-card-actions>
-            <v-btn flat color="red" @click="delete_product(n)">删除产品</v-btn>
+            <v-btn flat color="red" v-if="editable" @click="delete_product(n)">删除产品</v-btn>
           </v-card-actions>
         </v-card>
-        <v-btn block @click="append_product">新增产品</v-btn>
+        <v-btn block @click="append_product" v-if="editable">新增产品</v-btn>
       </v-form>
     </v-flex>
     <!-- btn -->
@@ -152,6 +153,7 @@ export default {
         alert("获取乡镇列表失败");
       });
     this.bodyTypes = new Array("大户", "合作社", "企业");
+    this.getStreetList();
   },
   methods: {
     getStreetList: function() {
@@ -181,6 +183,9 @@ export default {
 
 <style>
 div.v-input__slot > div > input[type="text"] {
+  color: #333;
+}
+.v-select__selection.v-select__selection--comma.v-select__selection--disabled {
   color: #333;
 }
 </style>
