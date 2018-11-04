@@ -67,7 +67,7 @@ module.exports = {
   axios: {
     // See https://github.com/nuxt-community/axios-module#options
     host: '58.87.119.20',
-    port: 1000,
+    port: 9000,
     https: false,
   },
 
