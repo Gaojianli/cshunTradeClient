@@ -3,51 +3,58 @@
     <!-- form -->
     <v-flex xs12>
       <v-form v-model="valid">
-        <v-text-field label="生产主体" v-model="form.mainBody" :disabled="!editable"></v-text-field>
-        <v-select :items="bodyTypes" label="主体类型" v-model="form.mainBodyType" :disabled="!editable"></v-select>
+        <v-text-field label="生产主体" v-model="form.main_body" :disabled="!editable"></v-text-field>
+        <v-select :items="main_body_items" label="主体类型" v-model="form.main_body_type"
+          :item-text="'name'" :disabled="!editable"></v-select>
         <v-text-field label="主体负责人" v-model="form.principal" :disabled="!editable"></v-text-field>
-        <v-text-field label="主体负责人联系方式" v-model="form.contacts" :disabled="!editable"></v-text-field>
-        <v-select :items="schema" label="一级品种分类" v-model="form.category" :disabled="!editable"></v-select>
-        <v-text-field label="二级品种分类" v-model="form.categorySecondary" :disabled="!editable"></v-text-field>
-        <v-select :items="towns" label="乡镇" v-model="form.town" :disabled="!editable" @input="getStreetList"></v-select>
-        <v-select :items="streets" label="所在村（社区）" v-model="form.street" :disabled="!form.town"></v-select>
+        <v-text-field label="主体负责人联系方式" v-model="form.principal_phone"
+          :disabled="!editable"></v-text-field>
+        <v-text-field label="销售负责人" v-model="form.sale_manager"></v-text-field>
+        <v-text-field label="销售负责人联系方式" v-model="form.sale_manager_phone"></v-text-field>
+        <v-select :items="schema" label="品种" v-model="form.category" :item-text="'name'"
+          :item-value="'name'" :disabled="!editable"></v-select>
+        <v-text-field label="二级品种" v-model="form.category_secondary" :disabled="!editable"></v-text-field>
+        <v-select :items="towns" label="乡镇" v-model="form.village" :disabled="!editable"
+          @input="getStreetList"></v-select>
+        <v-select :items="streets" label="所在村（社区）" v-model="form.street"
+          :disabled="!form.village"></v-select>
         <v-text-field label="种植面积" suffix="亩" v-model="form.area" :disabled="!editable"></v-text-field>
-        <!-- 种植日期 -->
         <v-radio-group row label="是否连片500亩以上:" v-model="form.larger_than_500_acres">
           <v-radio style="margin-left:20px" label="是" value="true"></v-radio>
           <v-radio label="否" value="false"></v-radio>
         </v-radio-group>
-        <v-text-field label="预计总产量" suffix="斤" v-model="form.yield" :disabled="!editable"></v-text-field>
-        <v-dialog ref="dialog" v-model="modal.plant_date" :persistent="editable" lazy full-width
-          width="290px">
-          <v-text-field slot="activator" v-model="form.plantDate" label="种植时间" prepend-icon="fas fa-calendar-alt"
-            readonly :disabled="!editable"></v-text-field>
-          <v-date-picker v-model="form.plantDate" scrollable @input="modal.plant_date = false"
+        <v-text-field label="预计总产量" suffix="斤" v-model="form.yield_out"
+          :disabled="!editable"></v-text-field>
+        <!-- 种植日期 -->
+        <v-dialog ref="dialog" v-model="modal.plant_date" :persistent="editable"
+          lazy full-width width="290px">
+          <v-text-field slot="activator" v-model="form.plant_date" label="种植时间"
+            prepend-icon="fas fa-calendar-alt" readonly :disabled="!editable"></v-text-field>
+          <v-date-picker v-model="form.plant_date" scrollable @input="modal.plant_date = false"
             locale="zh-cn" color="success" :readonly="!editable"></v-date-picker>
         </v-dialog>
         <!-- 预计上市时间 -->
-        <v-dialog ref="dialog" v-model="modal.begin_date" :persistent="editable" lazy full-width
-          width="290px">
-          <v-text-field slot="activator" v-model="form.marketBeginDate" label="预计上市时间" prepend-icon="fas fa-calendar-alt"
-            readonly :disabled="!editable"></v-text-field>
-          <v-date-picker v-model="form.marketBeginDate" scrollable @input="modal.begin_date = false"
+        <v-dialog ref="dialog" v-model="modal.begin_date" :persistent="editable"
+          lazy full-width width="290px">
+          <v-text-field slot="activator" v-model="form.market_begin_date" label="预计上市时间"
+            prepend-icon="fas fa-calendar-alt" readonly :disabled="!editable"></v-text-field>
+          <v-date-picker v-model="form.market_begin_date" scrollable @input="modal.begin_date = false"
             locale="zh-cn" color="success" :readonly="!editable"></v-date-picker>
         </v-dialog>
         <!-- 上市结束时间 -->
-        <v-dialog ref="dialog" v-model="modal.end_date" :persistent="editable" lazy full-width
-          width="290px">
-          <v-text-field slot="activator" v-model="form.marketEndDate" label="上市结束时间" prepend-icon="fas fa-calendar-alt"
-            readonly :disabled="!editable"></v-text-field>
-          <v-date-picker v-model="form.marketEndDate" scrollable @input="modal.end_date = false"
+        <v-dialog ref="dialog" v-model="modal.end_date" :persistent="editable"
+          lazy full-width width="290px">
+          <v-text-field slot="activator" v-model="form.market_end_date" label="上市结束时间"
+            prepend-icon="fas fa-calendar-alt" readonly :disabled="!editable"></v-text-field>
+          <v-date-picker v-model="form.market_end_date" scrollable @input="modal.end_date = false"
             locale="zh-cn" color="success" :readonly="!editable"></v-date-picker>
         </v-dialog>
-        <v-radio-group row label="是否有冷链存储:" v-model="form.hasCoolStore">
+        <v-radio-group row label="是否有冷链存储:" v-model="form.has_cool_store">
           <v-radio style="margin-left:20px" label="是" value="true"></v-radio>
           <v-radio label="否" value="false"></v-radio>
         </v-radio-group>
-        <v-text-field label="保本销售价格" prefix="￥" suffix="元/每斤" v-model="form.minPrice" :disabled="!editable"></v-text-field>
-        <v-text-field label="销售联系人" v-model="form.contacter"></v-text-field>
-        <v-text-field label="销售负责人" v-model="form.responsible"></v-text-field>
+        <v-text-field label="保本销售价格" prefix="￥" suffix="元/每斤" v-model="form.min_price"
+          :disabled="!editable"></v-text-field>
       </v-form>
     </v-flex>
     <!-- btn -->
@@ -69,25 +76,25 @@ export default {
       type: Object,
       default: () => {
         return {
-          mainBody: "",
+          main_body: "",
+          main_body_type: "",
           principal: "",
-          mainBodyType: "",
-          contacts: "",
-          town: "",
+          principal_phone: "",
+          sale_manager: "",
+          sale_manager_phone: "",
+          village: "",
           street: "",
           area: 0,
-          yield: 0,
-          location: {},
+          yield_out: 0,
           category: "",
           categorySecondary: "",
-          plantDate: "",
-          marketBeginDate: "",
-          marketEndDate: "",
-          hasCoolStore: false,
+          plant_date: "",
+          market_begin_date: "",
+          market_end_date: "",
+          has_cool_store: false,
           minPrice: 0,
           larger_than_500_acres: false,
-          contacter: "",
-          responsible: ""
+          min_price: ""
         };
       }
     },
@@ -109,7 +116,21 @@ export default {
       form: this.init_form,
       schema: [],
       towns: [],
-      streets: []
+      streets: [],
+      main_body_items: [
+        {
+          name: "大户",
+          value: "fam"
+        },
+        {
+          name: "合作社",
+          value: "coo"
+        },
+        {
+          name: "企业",
+          value: "com"
+        }
+      ]
     };
   },
   mounted() {
@@ -117,7 +138,7 @@ export default {
      * 获取果蔬登记一级分类
      */
     this.$axios
-      .$get("configs/VegCategories")
+      .$get("/api/planting_enrollment_categories/")
       .then(data => {
         this.schema = data;
       })
@@ -125,8 +146,9 @@ export default {
         console.log(err);
         alert("获取分类异常");
       });
+    //获取乡镇列表
     this.$axios
-      .$get("/api/users/all_villages")
+      .$get("/api/users/all_villages/")
       .then(data => {
         this.towns = data;
       })
@@ -139,7 +161,7 @@ export default {
   methods: {
     getStreetList: function() {
       this.$axios
-        .$get("/api/users/all_streets/?village=" + this.form.town)
+        .$get("/api/users/all_streets/?village=" + this.form.village)
         .then(data => {
           this.streets = data;
         })
@@ -148,6 +170,16 @@ export default {
           alert("获取社区列表失败");
         });
     }
+  },
+  append_product() {
+    this.form.breed_products.push({
+      name: "",
+      yield_out: "",
+      min_price: ""
+    });
+  },
+  delete_product(i) {
+    this.form.breed_products.splice(i, 1);
   }
 };
 </script>
