@@ -43,23 +43,7 @@ export const actions = {
       this.$axios.get('/api/planting_enrollments/')
         .then(({ data }) => {
           console.log(data[0]);
-          let _data = data.map((item) => {
-            /**
-             * 格式化时间字符串
-             * @param {string} utcStr UTC时间字符串
-             */
-            function formatDate(utcStr) {
-              let date = new Date(utcStr);
-              return `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
-            }
-            return {
-              ...item,
-              plantDate: formatDate(item.plantDate),
-              marketBeginDate: formatDate(item.marketBeginDate),
-              marketEndDate: formatDate(item.marketEndDate),
-            }
-          });
-          commit('update_plantingEnrollments', _data);
+          commit('update_plantingEnrollments', data);
           resolve();
         })
         .catch(err => {
@@ -111,22 +95,7 @@ export const actions = {
     return new Promise((resolve, reject) => {
       this.$axios.get('/api/breed_enrollments/')
         .then(({ data }) => {
-          let _data = data.map((item) => {
-            /**
-             * 格式化时间字符串
-             * @param {string} utcStr UTC时间字符串
-             */
-            function formatDate(utcStr) {
-              let date = new Date(utcStr);
-              return `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
-            }
-            return {
-              ...item,
-              seedlingDate: formatDate(item.seedlingDate),
-              outOfBarDate: formatDate(item.outOfBarDate),
-            }
-          });
-          commit('update_breedEnrollments', _data);
+          commit('update_breedEnrollments', data);
           resolve();
         })
         .catch(err => {
