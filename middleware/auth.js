@@ -8,27 +8,24 @@ export default function (ctx) {
       resolve();
       return;
     }
-    // if (!!ctx.store.state.user.username) {
-    //   resolve();
-    //   return;
-    // }
+    if (!!ctx.store.state.user.username) {
+      resolve();
+      return;
+    }
     //try to login via token
     const token = sessionStorage.getItem('token');
     console.log('token:' + token);
     if (token) {
-      // ctx.store.dispatch('user/me', token)
-      //   .then(() => { //login success
-      //     //ctx.redirect('/')
-      //     resolve();
-      //     return;
-      //   })
-      //   .catch(() => { //login failed
-      //     ctx.redirect('/login');
-      //     return;
-      //   })
-      console.log(token);
-      ctx.app.$axios.setToken(token, 'JWT'); //FIXME: after fix 'me'
-      resolve();
+      ctx.store.dispatch('user/me', token)
+        .then(() => { //login success
+          //ctx.redirect('/')
+          resolve();
+          return;
+        })
+        .catch(() => { //login failed
+          ctx.redirect('/login');
+          return;
+        })
     }
     //to login page
     else
