@@ -13,8 +13,8 @@
       <v-flex xs12 sm6>
         <v-text-field v-for="item in schema" :key="item.key" v-model="user_data[item.key]"
           :label="item.name" :disabled="!editable"></v-text-field>
-        <v-text-field v-model="new_passwd" label="修改密码" placeholder="输入新密码" color="error"
-          outline v-if="editable"></v-text-field>
+        <v-text-field v-model="new_passwd" label="修改密码" placeholder="输入新密码"
+          color="error" outline v-if="editable"></v-text-field>
       </v-flex>
     </v-layout>
     <!-- 快捷按钮 -->
@@ -48,16 +48,24 @@ export default {
           key: "username"
         },
         {
-          name: "姓名",
-          key: "name"
+          name: "姓",
+          key: "first_name"
+        },
+        {
+          name: "名",
+          key: "last_name"
         },
         {
           name: "联系电话",
-          key: "phone"
+          key: "phone_number"
+        },
+        {
+          name: "电子邮件",
+          key: "email"
         },
         {
           name: "乡镇",
-          key: "town"
+          key: "village"
         },
         {
           name: "街道",
@@ -66,11 +74,12 @@ export default {
       ],
       user_data: {
         username: "",
-        name: "",
-        phone: "",
-        town: "",
+        first_name: "",
+        last_name: "",
+        email: "",
         street: "",
-        adminLevel: ""
+        village: "",
+        phone_number: ""
       },
       new_passwd: "",
       editable: false,
