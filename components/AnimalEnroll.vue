@@ -2,28 +2,29 @@
   <v-layout justify-center column>
     <!-- form -->
     <v-flex xs12>
+      <v-alert :value="true" type="info">条目名称前加*号的为必填项</v-alert>
       <v-form v-model="valid">
-        <v-text-field label="生产主体" v-model="form.main_body" :disabled="!editable"></v-text-field>
-        <v-select :items="main_body_items" :item-text="'name'" label="主体类型"
+        <v-text-field label="*生产主体" v-model="form.main_body" :disabled="!editable"></v-text-field>
+        <v-select :items="main_body_items" :item-text="'name'" label="*主体类型"
           v-model="form.main_body_type" :disabled="!editable"></v-select>
-        <v-text-field label="主体负责人" v-model="form.principal" :disabled="!editable"></v-text-field>
-        <v-text-field label="主体负责人联系方式" v-model="form.principal_phone"
+        <v-text-field label="*主体负责人" v-model="form.principal" :disabled="!editable"></v-text-field>
+        <v-text-field label="*主体负责人联系方式" v-model="form.principal_phone"
           :disabled="!editable"></v-text-field>
         <v-text-field label="销售负责人" v-model="form.sale_manager" :disabled="!editable"></v-text-field>
         <v-text-field label="销售负责人联系方式" v-model="form.sale_manager_phone"
           :disabled="!editable"></v-text-field>
         <v-select :items="schema" :item-text="'name'" :item-value="'name'"
-          label="品种" v-model="form.category" :disabled="!editable"></v-select>
+          label="*品种" v-model="form.category" :disabled="!editable"></v-select>
         <v-text-field label="二级品种" v-model="form.category_secondary" :disabled="!editable"></v-text-field>
-        <v-select :items="towns" label="乡镇" v-model="form.village" :disabled="!editable"
+        <v-select :items="towns" label="*乡镇" v-model="form.village" :disabled="!editable"
           @input="getStreetList"></v-select>
-        <v-select :items="streets" label="所在村（社区）" v-model="form.street"
+        <v-select :items="streets" label="*所在村（社区）" v-model="form.street"
           :disabled="!form.village || !editable"></v-select>
         <v-text-field label="养殖数量" v-model="form.quantity" :disabled="!editable"></v-text-field>
         <!-- 投苗时间 -->
         <v-dialog ref="dialog" v-model="modal.seed_date" :persistent="editable"
           lazy full-width width="290px">
-          <v-text-field slot="activator" v-model="form.seedling_date" label="投苗时间"
+          <v-text-field slot="activator" v-model="form.seedling_date" label="*投苗时间"
             prepend-icon="fas fa-calendar-alt" readonly :disabled="!editable"></v-text-field>
           <v-date-picker v-model="form.seedling_date" scrollable @input="modal.seed_date = false"
             locale="zh-cn" color="orange lighten-1" :readonly="!editable"></v-date-picker>
@@ -31,13 +32,13 @@
         <!-- 出栏时间 -->
         <v-dialog ref="dialog" v-model="modal.out_date" :persistent="editable"
           lazy full-width width="290px">
-          <v-text-field slot="activator" v-model="form.out_of_bar_date" label="出栏时间"
+          <v-text-field slot="activator" v-model="form.out_of_bar_date" label="*出栏时间"
             prepend-icon="fas fa-calendar-alt" readonly :disabled="!editable"></v-text-field>
           <v-date-picker v-model="form.out_of_bar_date" scrollable @input="modal.out_date = false"
             locale="zh-cn" color="orange lighten-1" :readonly="!editable"></v-date-picker>
         </v-dialog>
 
-        <v-radio-group row label="是否有冷链存储:" v-model="form.has_cool_store"
+        <v-radio-group row label="*是否有冷链存储:" v-model="form.has_cool_store"
           :disabled="!editable">
           <v-radio label="是" :value="true"></v-radio>
           <v-radio label="否" :value="false"></v-radio>
@@ -47,9 +48,9 @@
         <v-card v-for="(item, n) in form.breed_products" :key="n" class="my-2">
           <!-- use key will cause rerender, I HAVE to ignore this -->
           <v-card-title primary-title>
-            <v-text-field label="产品名称" v-model="item.name" :disabled="!editable"></v-text-field>
-            <v-text-field label="预计总产量" v-model="item.yield_out" :disabled="!editable"></v-text-field>
-            <v-text-field label="保本销售价格" v-model="item.min_price" :disabled="!editable"
+            <v-text-field label="*产品名称" v-model="item.name" :disabled="!editable"></v-text-field>
+            <v-text-field label="*预计总产量" v-model="item.yield_out" :disabled="!editable"></v-text-field>
+            <v-text-field label="*保本销售价格" v-model="item.min_price" :disabled="!editable"
               :suffix="'元'"></v-text-field>
           </v-card-title>
           <v-card-actions>

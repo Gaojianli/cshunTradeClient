@@ -2,34 +2,35 @@
   <v-layout justify-center column>
     <!-- form -->
     <v-flex xs12>
+      <v-alert :value="true" type="info">条目名称前加*号的为必填项</v-alert>
       <v-form v-model="valid">
-        <v-text-field label="生产主体" v-model="form.main_body" :disabled="!editable"></v-text-field>
-        <v-select :items="main_body_items" label="主体类型" v-model="form.main_body_type"
+        <v-text-field label="*生产主体" v-model="form.main_body" :disabled="!editable"></v-text-field>
+        <v-select :items="main_body_items" label="*主体类型" v-model="form.main_body_type"
           :item-text="'name'" :disabled="!editable"></v-select>
-        <v-text-field label="主体负责人" v-model="form.principal" :disabled="!editable"></v-text-field>
-        <v-text-field label="主体负责人联系方式" v-model="form.principal_phone"
+        <v-text-field label="*主体负责人" v-model="form.principal" :disabled="!editable"></v-text-field>
+        <v-text-field label="*主体负责人联系方式" v-model="form.principal_phone"
           :disabled="!editable"></v-text-field>
         <v-text-field label="销售负责人" v-model="form.sale_manager"></v-text-field>
         <v-text-field label="销售负责人联系方式" v-model="form.sale_manager_phone"></v-text-field>
-        <v-select :items="schema" label="品种" v-model="form.category" :item-text="'name'"
+        <v-select :items="schema" label="*品种" v-model="form.category" :item-text="'name'"
           :item-value="'name'" :disabled="!editable"></v-select>
         <v-text-field label="二级品种" v-model="form.category_secondary" :disabled="!editable"></v-text-field>
-        <v-select :items="towns" label="乡镇" v-model="form.village" :disabled="!editable"
+        <v-select :items="towns" label="*乡镇" v-model="form.village" :disabled="!editable"
           @input="getStreetList"></v-select>
-        <v-select :items="streets" label="所在村（社区）" v-model="form.street"
+        <v-select :items="streets" label="*所在村（社区）" v-model="form.street"
           :disabled="!form.village || !editable"></v-select>
-        <v-text-field label="种植面积" suffix="亩" v-model="form.area" :disabled="!editable"></v-text-field>
-        <v-radio-group row label="是否连片500亩以上:" v-model="form.larger_than_500_acres"
+        <v-text-field label="*种植面积" suffix="亩" v-model="form.area" :disabled="!editable"></v-text-field>
+        <v-radio-group row label="*是否连片500亩以上:" v-model="form.larger_than_500_acres"
           :disabled="!editable">
           <v-radio style="margin-left:20px" label="是" :value="true"></v-radio>
           <v-radio label="否" :value="false"></v-radio>
         </v-radio-group>
-        <v-text-field label="预计总产量" suffix="斤" v-model="form.yield_out"
+        <v-text-field label="*预计总产量" suffix="斤" v-model="form.yield_out"
           :disabled="!editable"></v-text-field>
         <!-- 种植日期 -->
         <v-dialog ref="dialog" v-model="modal.plant_date" :persistent="editable"
           lazy full-width width="290px">
-          <v-text-field slot="activator" v-model="form.plant_date" label="种植时间"
+          <v-text-field slot="activator" v-model="form.plant_date" label="*种植时间"
             prepend-icon="fas fa-calendar-alt" readonly :disabled="!editable"></v-text-field>
           <v-date-picker v-model="form.plant_date" scrollable @input="modal.plant_date = false"
             locale="zh-cn" color="success" :readonly="!editable"></v-date-picker>
@@ -37,7 +38,7 @@
         <!-- 预计上市时间 -->
         <v-dialog ref="dialog" v-model="modal.begin_date" :persistent="editable"
           lazy full-width width="290px">
-          <v-text-field slot="activator" v-model="form.market_begin_date" label="预计上市时间"
+          <v-text-field slot="activator" v-model="form.market_begin_date" label="*预计上市时间"
             prepend-icon="fas fa-calendar-alt" readonly :disabled="!editable"></v-text-field>
           <v-date-picker v-model="form.market_begin_date" scrollable @input="modal.begin_date = false"
             locale="zh-cn" color="success" :readonly="!editable"></v-date-picker>
@@ -50,12 +51,12 @@
           <v-date-picker v-model="form.market_end_date" scrollable @input="modal.end_date = false"
             locale="zh-cn" color="success" :readonly="!editable"></v-date-picker>
         </v-dialog>
-        <v-radio-group row label="是否有冷链存储:" v-model="form.has_cool_store"
+        <v-radio-group row label="*是否有冷链存储:" v-model="form.has_cool_store"
           :disabled="!editable">
           <v-radio style="margin-left:20px" label="是" :value="true"></v-radio>
           <v-radio label="否" :value="false"></v-radio>
         </v-radio-group>
-        <v-text-field label="保本销售价格" prefix="￥" suffix="元/每斤" v-model="form.min_price"
+        <v-text-field label="*保本销售价格" prefix="￥" suffix="元/每斤" v-model="form.min_price"
           :disabled="!editable"></v-text-field>
       </v-form>
     </v-flex>
