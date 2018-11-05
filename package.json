@@ -6,14 +6,15 @@
   "private": true,
   "scripts": {
     "dev": "nuxt",
-    "build": "nuxt build",
-    "start": "nuxt start",
+    "build": "cross-env HOST=0.0.0.0 PORT=10086 nuxt build",
+    "start": "cross-env HOST=0.0.0.0 PORT=10086 nuxt start",
     "generate": "nuxt generate"
   },
   "dependencies": {
+    "@nuxtjs/axios": "^5.0.0",
+    "cross-env": "^5.2.0",
     "nuxt": "^1.0.0",
-    "vuetify": "^1.0.19",
-    "@nuxtjs/axios": "^5.0.0"
+    "vuetify": "^1.0.19"
   },
   "devDependencies": {
     "@fortawesome/fontawesome-free": "^5.2.0",
