@@ -31,11 +31,17 @@ export default {
       this.loading = true;
       this.$store
         .dispatch("enrollment/create_plantingEnrollment", data)
-        .then(() => {
+        .then(data => {
           this.loading = false;
-          this.$router.push("/");
+          //console.log(data);
+          this.$store.commit("actEnrollment", {
+            type: "planting",
+            id: data.id
+          });
+          this.$router.push("/editErm");
+          //this.$router.push("/");
         })
-        .catch(() => {
+        .catch((err) => {
           this.loading = false;
           alert("输入异常");
         });
@@ -44,11 +50,16 @@ export default {
       this.loading = true;
       this.$store
         .dispatch("enrollment/create_breedEnrollment", data)
-        .then(() => {
+        .then((data) => {
           this.loading = false;
-          this.$router.push("/");
+          this.$store.commit("actEnrollment", {
+            type: "planting",
+            id: data.id
+          });
+          this.$router.push("/editErm");
+          //this.$router.push("/");
         })
-        .catch(() => {
+        .catch((err) => {
           this.loading = false;
           alert("输入异常");
         });
