@@ -107,7 +107,7 @@ import VegEnroll from "@/components/VegEnroll";
 import AnimalEnroll from "@/components/AnimalEnroll";
 export default {
   asyncData(ctx, cb) {
-    if (!ctx.store.state.active_enrollment.id) ctx.redirect("/");
+    if (ctx.store.state.active_enrollment.id == null) ctx.redirect("/");
     let { type, id } = ctx.store.state.active_enrollment;
     let meta;
     //获取登记元信息
