@@ -64,6 +64,7 @@
     <v-layout xs12 v-if="editable">
       <v-spacer></v-spacer>
       <v-btn flat color="blue darken-2" @click="$emit('save', form)" :loading="loading">保存</v-btn>
+      <v-btn flat color="error" v-if="editing" @click="cancel" :loading="loading">取消</v-btn>
     </v-layout>
   </v-layout>
 </template>
@@ -102,6 +103,12 @@ export default {
       default: () => {
         return false;
       }
+    },
+    editing:{
+      type: Boolean,
+      default:()=>{
+        return false;
+      }
     }
   },
   data() {
@@ -112,6 +119,7 @@ export default {
         out_date: false
       },
       form: this.init_form,
+      meta:this.init_form,
       schema: [],
       towns: [],
       streets: [],
@@ -167,6 +175,14 @@ export default {
           console.log(err);
           alert("获取社区列表失败");
         });
+    },
+    cancel() {
+      console.log("canceled");
+      this.form = Object.assign({},this.$store.state.enrollment.BreedEnrollment.find(x => {
+          return x.id == this.form.id;
+        })
+      );
+      this.$emit("cancel");
     },
     append_product() {
       this.form.breed_products.push({

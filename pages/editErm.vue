@@ -1,5 +1,6 @@
 <template>
   <v-container>
+    <v-card class="pa-4 elevation-4">
     <v-tabs>
       <v-tab>登记信息</v-tab>
       <v-tab>订单信息</v-tab>
@@ -8,9 +9,9 @@
         <v-layout justify-center column>
           <v-flex xs12>
             <VegEnroll v-if="$store.state.active_enrollment.type == 'planting'"
-              :editable="meta_editable" :init_form="meta" @save="saveEnrollment"
+              :editable="meta_editable" :init_form="meta" :editing="true" @save="saveEnrollment" @cancel="restoreEnroll"
               :loading="loading" />
-            <AnimalEnroll v-else :editable="meta_editable" :init_form="meta"
+            <AnimalEnroll v-else :editable="meta_editable" :init_form="meta" :editing="true"  @cancel="restoreEnroll"
               @save="saveEnrollment" :loading="loading" />
           </v-flex>
           <v-flex v-if="!meta_editable">
@@ -71,8 +72,8 @@
         </v-layout>
       </v-tab-item>
       <!-- 订单表单 -->
-      <v-dialog persistent v-model="active" fullscreen>
-        <v-card>
+      <v-dialog persistent v-model="active">
+        <v-card class="pa-4">
           <v-card-text>
             <v-form>
               <!-- if breed choose product -->
@@ -98,6 +99,7 @@
         </v-card>
       </v-dialog>
     </v-tabs>
+    </v-card>
   </v-container>
 </template>
 
@@ -311,6 +313,10 @@ export default {
       });
       if (product) return product.name;
       else return "";
+    },
+    //还原表单状态
+    restoreEnroll: function() {
+      this.meta_editable = false;
     }
   },
   mounted() {
