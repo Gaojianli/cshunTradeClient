@@ -183,22 +183,24 @@ export default {
     },
     cancel() {
       console.log("canceled");
-      this.form = Object.assign({},this.$store.state.enrollment.PlantingEnrollment.find(x => {
+      this.form = Object.assign(
+        {},
+        this.$store.state.enrollment.PlantingEnrollment.find(x => {
           return x.id == this.form.id;
         })
       );
       this.$emit("cancel");
+    },
+    append_product() {
+      this.form.breed_products.push({
+        name: "",
+        yield_out: "",
+        min_price: ""
+      });
+    },
+    delete_product(i) {
+      this.form.breed_products.splice(i, 1);
     }
-  },
-  append_product() {
-    this.form.breed_products.push({
-      name: "",
-      yield_out: "",
-      min_price: ""
-    });
-  },
-  delete_product(i) {
-    this.form.breed_products.splice(i, 1);
   }
 };
 </script>
