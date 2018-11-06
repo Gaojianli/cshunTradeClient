@@ -41,7 +41,7 @@ export const actions = {
      */
     read_plantingEnrollments({ dispatch, commit }) {
         return new Promise((resolve, reject) => {
-            this.$axios.get('/api/planting_enrollments/')
+            this.$axios.get('/api/planting_enrollments/?editable=1')
                 .then(({ data }) => {
                     console.log(data[0]);
                     commit('update_plantingEnrollments', data);
@@ -94,7 +94,7 @@ export const actions = {
      */
     read_breedEnrollments({ commit }) {
         return new Promise((resolve, reject) => {
-            this.$axios.get('/api/breed_enrollments/')
+            this.$axios.get('/api/breed_enrollments/?editable=1')
                 .then(({ data }) => {
                     commit('update_breedEnrollments', data);
                     resolve();
