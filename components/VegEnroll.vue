@@ -2,7 +2,7 @@
   <v-layout justify-center column>
     <!-- form -->
     <v-flex xs12>
-      <v-alert :value="true" type="info">条目名称前加*号的为必填项</v-alert>
+      <v-alert v-if="editable" :value="true" type="info">条目名称前加*号的为必填项</v-alert>
       <v-form v-model="valid">
         <v-text-field label="*生产主体" v-model="form.main_body" :disabled="!editable"></v-text-field>
         <v-select :items="main_body_items" label="*主体类型" v-model="form.main_body_type"
