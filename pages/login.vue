@@ -4,19 +4,19 @@
       <v-flex xs12 sm8 md4>
         <v-card class="elevation-12">
           <v-toolbar dark color="blue">
-            <v-toolbar-title>登陆系统</v-toolbar-title>
+            <v-toolbar-title>登录系统</v-toolbar-title>
           </v-toolbar>
           <v-card-text>
             <v-form>
-              <v-text-field v-model="username" prepend-icon="fas fa-user-circle" name="login" label="用户名"
+              <v-text-field v-model="username" prepend-icon="fas fa-user-circle" name="login" label="用户名" color="blue"
                 type="text"></v-text-field>
-              <v-text-field v-model="password" id="password" prepend-icon="fas fa-lock" name="password"
+              <v-text-field v-model="password" id="password" prepend-icon="fas fa-lock" name="password" color="blue"
                 label="密码" type="password"></v-text-field>
             </v-form>
           </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="blue" dark @click="login({username,password})">登陆</v-btn>
+            <v-btn color="blue" dark @click="login({username,password})">登录</v-btn>
           </v-card-actions>
           <v-alert :value="!!loginError" type="error">
             {{loginError}}
