@@ -1,6 +1,7 @@
 <template>
   <v-container>
     <v-layout justify-center column>
+      <v-card class="pa-4 elevation-4">
       <v-select :items="['蔬果类登记','牲畜类登记']" v-model="type" label="登记类型"></v-select>
       <v-divider></v-divider>
       <v-flex xs12 v-if="type !== ''">
@@ -8,6 +9,7 @@
           :loading="loading" />
         <AnimalEnroll v-else :editable="true" :loading="loading" @save="animalEnroll" />
       </v-flex>
+      </v-card>
     </v-layout>
   </v-container>
 </template>
@@ -41,7 +43,7 @@ export default {
           this.$router.push("/editErm");
           //this.$router.push("/");
         })
-        .catch((err) => {
+        .catch(err => {
           this.loading = false;
           alert("输入异常");
         });
@@ -50,7 +52,7 @@ export default {
       this.loading = true;
       this.$store
         .dispatch("enrollment/create_breedEnrollment", data)
-        .then((data) => {
+        .then(data => {
           this.loading = false;
           this.$store.commit("actEnrollment", {
             type: "planting",
@@ -59,7 +61,7 @@ export default {
           this.$router.push("/editErm");
           //this.$router.push("/");
         })
-        .catch((err) => {
+        .catch(err => {
           this.loading = false;
           alert("输入异常");
         });
