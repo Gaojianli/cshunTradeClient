@@ -86,7 +86,7 @@
               <v-text-field label="订单来源类型" v-model="form_data.order_source_type"></v-text-field>
               <v-text-field label="具体订单来源" v-model="form_data.order_source_name"></v-text-field>
               <v-radio-group row label="是否境外订单:" v-model="form_data.is_overseas">
-                <v-radio label="是" :value="true" style="margin-left:1em"></v-radio>
+                <v-radio label="是" :value="true"></v-radio>
                 <v-radio label="否" :value="false"></v-radio>
               </v-radio-group>
               <v-textarea label="地址" v-model="form_data.order_source_address" v-if="form_data.is_overseas"></v-textarea>
@@ -188,9 +188,6 @@ export default {
       active: false,
       loading: false,
       meta_editable: false,
-      province: "",
-      city: "",
-      district: "",
       form_data: {
         order_source_type: "",
         order_source_name: "",
