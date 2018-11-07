@@ -11,7 +11,8 @@ export const state = () => ({
   "phone_number": "",
   "admin_level": "",
   "groups": [],
-  "user_permissions": []
+  "user_permissions": [],
+  loginError: ''
 })
 export const getters = {
   isLogin: ({ username }) => !!username,
@@ -60,7 +61,6 @@ export const actions = {
       })
       .then(({ data }) => {
         const token = data.token;
-        console.log(token);
         this.$axios.setToken(token, 'JWT');
         sessionStorage.setItem('token', token);
       })
