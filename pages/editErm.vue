@@ -89,7 +89,42 @@
                 <v-radio label="是" :value="true"></v-radio>
                 <v-radio label="否" :value="false"></v-radio>
               </v-radio-group>
-              <v-textarea label="地址" v-model="form_data.order_source_address"></v-textarea>
+              <v-textarea label="地址" v-model="form_data.order_source_address" v-if="form_data.is_overseas"></v-textarea>
+              <v-layout fluid wrap align-start justify-start row v-if="!form_data.is_overseas">
+                <v-flex sm1>
+              <v-radio-group row label="请选择地址:">
+              </v-radio-group>
+                </v-flex>
+              <v-flex  xs12 sm3 d-flex mr-4>
+                <v-select
+                  :items="province_info"
+                  label="省/市/自治区/特别行政区"
+                  solo
+                  v-model="province"
+                  @change="form_data.order_source_address=province"
+                ></v-select>
+                </v-flex>
+              <v-flex  xs12 sm3 d-flex mr-4>
+                <v-select
+                  :items="cityinfo[province]"
+                  label="市/地区/旗/盟/自治州"
+                  v-if="province"
+                  solo
+                  v-model="city"
+                   @change="form_data.order_source_address +=city"
+                ></v-select>
+                </v-flex>
+              <v-flex  xs12 sm3 d-flex>
+                <v-select
+                  :items="district_info[city]"
+                  label="区/县"
+                  v-if="city"
+                  solo
+                  v-model="district"
+                  @change="form_data.order_source_address +=district"
+                ></v-select>
+              </v-flex>
+            </v-layout>
             </v-form>
           </v-card-text>
           <v-card-actions>
@@ -107,6 +142,7 @@
 import axios from "axios";
 import VegEnroll from "@/components/VegEnroll";
 import AnimalEnroll from "@/components/AnimalEnroll";
+let province_infos=require("@/static/province_info");
 export default {
   asyncData(ctx, cb) {
     if (ctx.store.state.active_enrollment.id == null) ctx.redirect("/");
@@ -165,7 +201,13 @@ export default {
         { name: "固定价格", value: "fixed" },
         { name: "市场价格", value: "market" },
         { name: "保底价格 + 市场价格", value: "safe_market" }
-      ]
+      ],
+      province_info:province_infos.province_info,
+      cityinfo:province_infos.cityinfo,
+      district_info:province_infos.district_info,
+      province:"",
+      city:"",
+      district:""
     };
   },
   methods: {
@@ -240,6 +282,7 @@ export default {
       this.form_data.price = "";
       this.form_data.sale_model = "";
       this.form_data.id = null;
+      this.province=this.city=this.district="";
     },
     /**
      * 编辑订单
