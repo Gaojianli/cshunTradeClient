@@ -12,8 +12,8 @@
           :disabled="!editable"></v-text-field>
         <v-text-field label="销售负责人" v-model="form.sale_manager"></v-text-field>
         <v-text-field label="销售负责人联系方式" v-model="form.sale_manager_phone"></v-text-field>
-        <v-select :items="schema" label="*品种" v-model="form.category" :item-text="'name'"
-          :item-value="'name'" :disabled="!editable"></v-select>
+        <v-select :items="schema" label="*品种" v-model="form.category"
+          :item-text="'name'" :item-value="'name'" :disabled="!editable"></v-select>
         <v-text-field label="二级品种" v-model="form.category_secondary" :disabled="!editable"></v-text-field>
         <v-select :items="towns" label="*乡镇" v-model="form.village" :disabled="!editable"
           @input="getStreetList"></v-select>
@@ -189,6 +189,7 @@ export default {
           return x.id == this.form.id;
         })
       );
+      this.getStreetList();
       this.$emit("cancel");
     },
     append_product() {

@@ -104,9 +104,9 @@ export default {
         return false;
       }
     },
-    editing:{
+    editing: {
       type: Boolean,
-      default:()=>{
+      default: () => {
         return false;
       }
     }
@@ -119,7 +119,7 @@ export default {
         out_date: false
       },
       form: this.init_form,
-      meta:this.init_form,
+      meta: this.init_form,
       schema: [],
       towns: [],
       streets: [],
@@ -178,10 +178,13 @@ export default {
     },
     cancel() {
       console.log("canceled");
-      this.form = Object.assign({},this.$store.state.enrollment.BreedEnrollment.find(x => {
+      this.form = Object.assign(
+        {},
+        this.$store.state.enrollment.BreedEnrollment.find(x => {
           return x.id == this.form.id;
         })
       );
+      this.getStreetList();
       this.$emit("cancel");
     },
     append_product() {
