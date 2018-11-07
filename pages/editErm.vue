@@ -142,7 +142,7 @@
 import axios from "axios";
 import VegEnroll from "@/components/VegEnroll";
 import AnimalEnroll from "@/components/AnimalEnroll";
-let province_infos=require("@/pages/province_info");
+let province_infos=require("@/static/province_info");
 export default {
   asyncData(ctx, cb) {
     if (ctx.store.state.active_enrollment.id == null) ctx.redirect("/");
