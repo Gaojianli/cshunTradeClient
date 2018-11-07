@@ -76,11 +76,11 @@ export const actions = {
       })
   },
   /**
-   * 根据token获取用户信息 FIXME:get my fucking data
+   * 根据token获取用户信息
    */
   me({ commit }, token) {
     return new Promise((resolve, reject) => {
-      this.$axios.get(`/api/users/me`, token ? {
+      this.$axios.get(`/api/users/me/`, token ? {
           headers: {
             Authorization: `JWT ${token}`
           }
