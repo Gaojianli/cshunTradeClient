@@ -11,7 +11,8 @@ export const state = () => ({
   "phone_number": "",
   "admin_level": "",
   "groups": [],
-  "user_permissions": []
+  "user_permissions": [],
+  loginError: ''
 })
 export const getters = {
   isLogin: ({ username }) => !!username,
@@ -60,7 +61,6 @@ export const actions = {
       })
       .then(({ data }) => {
         const token = data.token;
-        console.log(token);
         this.$axios.setToken(token, 'JWT');
         sessionStorage.setItem('token', token);
       })
@@ -76,11 +76,11 @@ export const actions = {
       })
   },
   /**
-   * 根据token获取用户信息 FIXME:get my fucking data
+   * 根据token获取用户信息
    */
   me({ commit }, token) {
     return new Promise((resolve, reject) => {
-      this.$axios.get(`/api/users/me`, token ? {
+      this.$axios.get(`/api/users/me/`, token ? {
           headers: {
             Authorization: `JWT ${token}`
           }

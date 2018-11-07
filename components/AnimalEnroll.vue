@@ -45,7 +45,7 @@
         </v-radio-group>
 
         <v-divider></v-divider>
-        <v-card v-for="(item, n) in form.breed_products" :key="n" class="my-2">
+        <v-card flat v-for="(item, n) in form.breed_products" :key="n" class="my-2">
           <!-- use key will cause rerender, I HAVE to ignore this -->
           <v-card-title primary-title>
             <v-text-field label="*产品名称" v-model="item.name" :disabled="!editable"></v-text-field>
@@ -56,6 +56,7 @@
           <v-card-actions>
             <v-btn flat color="red" v-if="editable" @click="delete_product(n)">删除产品</v-btn>
           </v-card-actions>
+          <v-divider></v-divider>
         </v-card>
         <v-btn block @click="append_product" v-if="editable">新增产品</v-btn>
       </v-form>
@@ -104,9 +105,9 @@ export default {
         return false;
       }
     },
-    editing:{
+    editing: {
       type: Boolean,
-      default:()=>{
+      default: () => {
         return false;
       }
     }
@@ -119,7 +120,7 @@ export default {
         out_date: false
       },
       form: this.init_form,
-      meta:this.init_form,
+      meta: this.init_form,
       schema: [],
       towns: [],
       streets: [],
@@ -178,10 +179,13 @@ export default {
     },
     cancel() {
       console.log("canceled");
-      this.form = Object.assign({},this.$store.state.enrollment.BreedEnrollment.find(x => {
+      this.form = Object.assign(
+        {},
+        this.$store.state.enrollment.BreedEnrollment.find(x => {
           return x.id == this.form.id;
         })
       );
+      this.getStreetList();
       this.$emit("cancel");
     },
     append_product() {

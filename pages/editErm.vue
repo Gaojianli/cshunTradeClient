@@ -1,139 +1,125 @@
 <template>
   <v-container>
     <v-card class="pa-4 elevation-4">
-    <v-tabs>
-      <v-tab>登记信息</v-tab>
-      <v-tab>订单信息</v-tab>
-      <!-- 登记元信息 -->
-      <v-tab-item>
-        <v-layout justify-center column>
-          <v-flex xs12>
-            <VegEnroll v-if="$store.state.active_enrollment.type == 'planting'"
-              :editable="meta_editable" :init_form="meta" :editing="true" @save="saveEnrollment" @cancel="restoreEnroll"
-              :loading="loading" />
-            <AnimalEnroll v-else :editable="meta_editable" :init_form="meta" :editing="true"  @cancel="restoreEnroll"
-              @save="saveEnrollment" :loading="loading" />
-          </v-flex>
-          <v-flex v-if="!meta_editable">
-            <v-btn flat @click="meta_editable = true">编辑登记</v-btn>
-            <v-btn flat color="error" @click="deleteEnrollment">删除登记</v-btn>
-          </v-flex>
-        </v-layout>
-      </v-tab-item>
-      <!-- 订单列表 -->
-      <v-tab-item>
-        <v-layout column>
-          <v-flex xs12>
-            <v-radio-group row label="是否有订单:" v-model="has_order" :disabled="orders.length > 0">
-              <v-radio label="是" :value="true"></v-radio>
-              <v-radio label="否" :value="false"></v-radio>
-            </v-radio-group>
-          </v-flex>
-          <!-- 订单列表 -->
-          <v-flex>
-            <v-card flat class="transparent">
-              <v-list three-line>
-                <template v-for="item in orders">
-                  <v-list-tile :key="item.id" class="py-2">
-                    <v-list-tile-content>
-                      <!-- if breed show product -->
-                      <v-list-tile-title v-if="type == 'breed'">产品：{{computeProductName(item.breed_product)}}</v-list-tile-title>
-                      <v-list-tile-title>地址：{{item.order_source_address}}</v-list-tile-title>
-                      <v-list-tile-sub-title>价格：{{item.price}}</v-list-tile-sub-title>
-                      <v-list-tile-sub-title>
-                        模式：{{modes.find((x)=>{return x.value ==
-                        item.sale_model}).name}}
-                      </v-list-tile-sub-title>
-                      <v-list-tile-sub-title>{{item.is_overseas ? '境外订单' :
-                        '境内订单'}}</v-list-tile-sub-title>
-                    </v-list-tile-content>
-                    <v-list-tile-action>
-                      <v-btn icon ripple>
-                        <v-icon color="blue darken-1" class="list-icon" @click="editOrder(item)">fas
-                          fa-pen</v-icon>
-                      </v-btn>
-                      <v-btn icon ripple>
-                        <v-icon color="red" class="list-icon" @click="deleteOrder(item)">fas
-                          fa-trash-alt</v-icon>
-                      </v-btn>
-                    </v-list-tile-action>
-                  </v-list-tile>
-                  <v-divider :key="-item.id"></v-divider>
-                </template>
-              </v-list>
-            </v-card>
-          </v-flex>
-          <v-flex xs12>
-            <v-btn block flat @click="active = true" v-if="has_order" style="border:dashed rgba(0,0,0,0.25) 2px;">
-              <v-icon style="font-size:18px;">fas fa-plus</v-icon>
-              <span>增加订单</span>
-            </v-btn>
-          </v-flex>
-        </v-layout>
-      </v-tab-item>
-      <!-- 订单表单 -->
-      <v-dialog persistent v-model="active">
-        <v-card class="pa-4">
-          <v-card-text>
-            <v-form>
-              <!-- if breed choose product -->
-              <v-select v-if="type == 'breed'" :items="meta.breed_products"
-                label="对应产品" v-model="form_data.breed_product" :item-text="'name'"
-                :item-value="'id'"></v-select>
-              <v-text-field label="价格" v-model="form_data.price"></v-text-field>
-              <v-select :items="modes" v-model="form_data.sale_model" item-text="name"
-                item-value="value" label="价格类型"></v-select>
-              <v-text-field label="订单来源类型" v-model="form_data.order_source_type"></v-text-field>
-              <v-text-field label="具体订单来源" v-model="form_data.order_source_name"></v-text-field>
-              <v-radio-group row label="是否境外订单:" v-model="form_data.is_overseas">
+      <v-tabs>
+        <v-tab>登记信息</v-tab>
+        <v-tab>订单信息</v-tab>
+        <!-- 登记元信息 -->
+        <v-tab-item>
+          <v-layout justify-center column>
+            <v-flex xs12>
+              <VegEnroll v-if="$store.state.active_enrollment.type == 'planting'"
+                :editable="meta_editable" :init_form="meta" :editing="true"
+                @save="saveEnrollment" @cancel="restoreEnroll" :loading="loading" />
+              <AnimalEnroll v-else :editable="meta_editable" :init_form="meta"
+                :editing="true" @cancel="restoreEnroll" @save="saveEnrollment"
+                :loading="loading" />
+            </v-flex>
+            <v-flex v-if="!meta_editable">
+              <v-btn flat @click="meta_editable = true">编辑登记</v-btn>
+              <v-btn flat color="error" @click="deleteEnrollment">删除登记</v-btn>
+            </v-flex>
+          </v-layout>
+        </v-tab-item>
+        <!-- 订单列表 -->
+        <v-tab-item>
+          <v-layout column>
+            <v-flex xs12>
+              <v-radio-group row label="是否有订单:" v-model="has_order" :disabled="orders.length > 0">
                 <v-radio label="是" :value="true"></v-radio>
                 <v-radio label="否" :value="false"></v-radio>
               </v-radio-group>
-              <v-textarea label="地址" v-model="form_data.order_source_address" v-if="form_data.is_overseas"></v-textarea>
-              <v-layout fluid wrap align-start justify-start row v-if="!form_data.is_overseas">
-                <v-flex sm1>
-              <v-radio-group row label="请选择地址:">
-              </v-radio-group>
-                </v-flex>
-              <v-flex  xs12 sm3 d-flex mr-4>
-                <v-select
-                  :items="province_info"
-                  label="省/市/自治区/特别行政区"
-                  solo
-                  v-model="province"
-                  @change="form_data.order_source_address=province"
-                ></v-select>
-                </v-flex>
-              <v-flex  xs12 sm3 d-flex mr-4>
-                <v-select
-                  :items="cityinfo[province]"
-                  label="市/地区/旗/盟/自治州"
-                  v-if="province"
-                  solo
-                  v-model="city"
-                   @change="form_data.order_source_address +=city"
-                ></v-select>
-                </v-flex>
-              <v-flex  xs12 sm3 d-flex>
-                <v-select
-                  :items="district_info[city]"
-                  label="区/县"
-                  v-if="city"
-                  solo
-                  v-model="district"
-                  @change="form_data.order_source_address +=district"
-                ></v-select>
-              </v-flex>
-            </v-layout>
-            </v-form>
-          </v-card-text>
-          <v-card-actions>
-            <v-btn flat color="blue" @click="saveDialog" :loading="loading">保存</v-btn>
-            <v-btn flat color="error" @click="cancelDialog">取消</v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
-    </v-tabs>
+            </v-flex>
+            <!-- 订单列表 -->
+            <v-flex>
+              <v-card flat class="transparent">
+                <v-list three-line>
+                  <template v-for="item in orders">
+                    <v-list-tile :key="item.id" class="py-2">
+                      <v-list-tile-content>
+                        <!-- if breed show product -->
+                        <v-list-tile-title v-if="type == 'breed'">产品：{{computeProductName(item.breed_product)}}</v-list-tile-title>
+                        <v-list-tile-title>地址：{{item.order_source_address}}</v-list-tile-title>
+                        <v-list-tile-sub-title>价格：{{item.price}}</v-list-tile-sub-title>
+                        <v-list-tile-sub-title>
+                          模式：{{modes.find((x)=>{return x.value ==
+                          item.sale_model}).name}}
+                        </v-list-tile-sub-title>
+                        <v-list-tile-sub-title>{{item.is_overseas ? '境外订单' :
+                          '境内订单'}}</v-list-tile-sub-title>
+                      </v-list-tile-content>
+                      <v-list-tile-action>
+                        <v-btn icon ripple>
+                          <v-icon color="blue darken-1" class="list-icon"
+                            @click="editOrder(item)">fas
+                            fa-pen</v-icon>
+                        </v-btn>
+                        <v-btn icon ripple>
+                          <v-icon color="red" class="list-icon" @click="deleteOrder(item)">fas
+                            fa-trash-alt</v-icon>
+                        </v-btn>
+                      </v-list-tile-action>
+                    </v-list-tile>
+                    <v-divider :key="-item.id"></v-divider>
+                  </template>
+                </v-list>
+              </v-card>
+            </v-flex>
+            <v-flex xs12>
+              <v-btn block flat @click="active = true" v-if="has_order" style="border:dashed rgba(0,0,0,0.25) 2px;">
+                <v-icon style="font-size:18px;">fas fa-plus</v-icon>
+                <span>增加订单</span>
+              </v-btn>
+            </v-flex>
+          </v-layout>
+        </v-tab-item>
+        <!-- 订单表单 -->
+        <v-dialog persistent v-model="active">
+          <v-card class="pa-4">
+            <v-card-text>
+              <v-form>
+                <!-- if breed choose product -->
+                <v-select v-if="type == 'breed'" :items="meta.breed_products"
+                  label="对应产品" v-model="form_data.breed_product" :item-text="'name'"
+                  :item-value="'id'"></v-select>
+                <v-text-field label="价格" v-model="form_data.price"></v-text-field>
+                <v-select :items="modes" v-model="form_data.sale_model"
+                  item-text="name" item-value="value" label="价格类型"></v-select>
+                <v-text-field label="订单来源类型" v-model="form_data.order_source_type"></v-text-field>
+                <v-text-field label="具体订单来源" v-model="form_data.order_source_name"></v-text-field>
+                <v-radio-group row label="是否境外订单:" v-model="form_data.is_overseas">
+                  <v-radio label="是" :value="true"></v-radio>
+                  <v-radio label="否" :value="false"></v-radio>
+                </v-radio-group>
+                <v-textarea label="地址" v-model="form_data.order_source_address"
+                  v-if="form_data.is_overseas"></v-textarea>
+                <v-layout fluid wrap align-start justify-start row v-if="!form_data.is_overseas">
+                  <v-flex sm1>
+                    <v-radio-group row label="请选择地址:">
+                    </v-radio-group>
+                  </v-flex>
+                  <v-flex xs12 sm3 d-flex mr-4>
+                    <v-select :items="province_info" label="省/市/自治区/特别行政区" solo
+                      v-model="province" @change="form_data.order_source_address=province"></v-select>
+                  </v-flex>
+                  <v-flex xs12 sm3 d-flex mr-4>
+                    <v-select :items="cityinfo[province]" label="市/地区/旗/盟/自治州"
+                      v-if="province" solo v-model="city" @change="form_data.order_source_address +=city"></v-select>
+                  </v-flex>
+                  <v-flex xs12 sm3 d-flex>
+                    <v-select :items="district_info[city]" label="区/县" v-if="city"
+                      solo v-model="district" @change="form_data.order_source_address +=district"></v-select>
+                  </v-flex>
+                </v-layout>
+              </v-form>
+            </v-card-text>
+            <v-card-actions>
+              <v-btn flat color="blue" @click="saveDialog" :loading="loading">保存</v-btn>
+              <v-btn flat color="error" @click="cancelDialog">取消</v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
+      </v-tabs>
     </v-card>
   </v-container>
 </template>
@@ -142,7 +128,7 @@
 import axios from "axios";
 import VegEnroll from "@/components/VegEnroll";
 import AnimalEnroll from "@/components/AnimalEnroll";
-let province_infos=require("@/static/province_info");
+let province_infos = require("@/static/province_info");
 export default {
   asyncData(ctx, cb) {
     if (ctx.store.state.active_enrollment.id == null) ctx.redirect("/");
@@ -202,12 +188,12 @@ export default {
         { name: "市场价格", value: "market" },
         { name: "保底价格 + 市场价格", value: "safe_market" }
       ],
-      province_info:province_infos.province_info,
-      cityinfo:province_infos.cityinfo,
-      district_info:province_infos.district_info,
-      province:"",
-      city:"",
-      district:""
+      province_info: province_infos.province_info,
+      cityinfo: province_infos.cityinfo,
+      district_info: province_infos.district_info,
+      province: "",
+      city: "",
+      district: ""
     };
   },
   methods: {
@@ -282,7 +268,7 @@ export default {
       this.form_data.price = "";
       this.form_data.sale_model = "";
       this.form_data.id = null;
-      this.province=this.city=this.district="";
+      this.province = this.city = this.district = "";
     },
     /**
      * 编辑订单
