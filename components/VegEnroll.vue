@@ -64,7 +64,7 @@
     <v-layout xs12 v-if="editable">
       <v-spacer></v-spacer>
       <v-btn flat color="blue darken-2" @click="$emit('save', form)" :loading="loading">保存</v-btn>
-      <v-btn flat color="error" v-if="editing" @click="cancel" :loading="loading">取消</v-btn>
+      <v-btn flat color="error" v-if="editing" @click="cancel">取消</v-btn>
     </v-layout>
   </v-layout>
 </template>
