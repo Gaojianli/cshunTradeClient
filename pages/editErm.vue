@@ -100,11 +100,11 @@
                   </v-flex>
                   <v-flex xs12 sm3 d-flex mr-4>
                     <v-select :items="province_info" label="省/市/自治区/特别行政区" solo
-                      v-model="province" @change="form_data.order_source_address=province"></v-select>
+                      v-model="province" @change="form_data.order_source_address=province;district=city=''"></v-select>
                   </v-flex>
                   <v-flex xs12 sm3 d-flex mr-4>
                     <v-select :items="cityinfo[province]" label="市/地区/旗/盟/自治州"
-                      v-if="province" solo v-model="city" @change="form_data.order_source_address +=city"></v-select>
+                      v-if="province" solo v-model="city" @change="form_data.order_source_address +=city;district=''"></v-select>
                   </v-flex>
                   <v-flex xs12 sm3 d-flex>
                     <v-select :items="district_info[city]" label="区/县" v-if="city"
