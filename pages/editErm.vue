@@ -204,7 +204,10 @@ export default {
       ],
       province_info:province_infos.province_info,
       cityinfo:province_infos.cityinfo,
-      district_info:province_infos.district_info
+      district_info:province_infos.district_info,
+      province:"",
+      city:"",
+      district:""
     };
   },
   methods: {
