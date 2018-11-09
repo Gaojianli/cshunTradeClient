@@ -82,10 +82,10 @@
                 <v-select v-if="type == 'breed'" :items="meta.breed_products"
                   label="对应产品" v-model="form_data.breed_product" :item-text="'name'"
                   :item-value="'id'"></v-select>
-                <v-text-field label="价格" v-model="form_data.price"></v-text-field>
                 <v-select :items="modes" v-model="form_data.sale_model"
                   item-text="name" item-value="value" label="价格类型"></v-select>
-                <v-text-field label="订单来源类型" v-model="form_data.order_source_type"></v-text-field>
+                <v-text-field label="价格" v-model="form_data.price" v-if="form_data.sale_model!='safe_market'&&form_data.sale_model!=''"></v-text-field>
+                <v-select label="订单来源类型" v-model="form_data.order_source_type" :items="['农监对接' ,'农校对接','农医对接','农超对接','农市对接']"></v-select>
                 <v-text-field label="具体订单来源" v-model="form_data.order_source_name"></v-text-field>
                 <v-radio-group row label="是否境外订单:" v-model="form_data.is_overseas">
                   <v-radio label="是" :value="true"></v-radio>
